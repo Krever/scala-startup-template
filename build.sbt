@@ -1,4 +1,5 @@
 lazy val root = (project in file("."))
+  .aggregate(frontend, backend)
   .dependsOn(frontend, backend)
   .enablePlugins(JavaAppPackaging)
   .settings(
@@ -12,4 +13,4 @@ lazy val backend = project
 
 lazy val frontend = project
 
-lazy val shared = crossProject.crossType(CrossType.Pure)
+lazy val shared = project
