@@ -3,6 +3,7 @@ lazy val frontend = (project in file("."))
   .settings(
     pipelineStages in Assets := Seq(scalaJSPipeline),
     scalaJSProjects := Seq(`frontend-scalajs`)
-  ).settings(Linting.settings)
+  )
+  .settings(Linting.settings)
 
 lazy val `frontend-scalajs` = project

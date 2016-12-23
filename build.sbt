@@ -9,14 +9,16 @@ lazy val root = (project in file("."))
     version in ThisBuild := "0.1.0",
     scalaVersion in ThisBuild := "2.12.1",
     mainClass in Compile := Some("sst.backend.Main")
-  ).settings(Linting.settings)
+  )
+  .settings(Linting.settings)
 
 lazy val backend = project
 
 lazy val frontend = project
 
 //Shared project config
-lazy val shared = crossProject.crossType(CrossType.Pure)
+lazy val shared = crossProject
+  .crossType(CrossType.Pure)
   .settings(Linting.settings)
 
 lazy val sharedJs = shared.js
