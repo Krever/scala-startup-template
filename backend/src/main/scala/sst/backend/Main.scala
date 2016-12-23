@@ -6,6 +6,7 @@ object Main {
 
   def main(args: Array[String]): Unit = {
     System.out.println(HelloWorld("from Scala"))
+//    while(true){}
     if (args.length > 0)
       Option(getClass.getClassLoader.getResource(args(0))) match {
         case Some(url) => System.out.println(s"Resource found: $url")

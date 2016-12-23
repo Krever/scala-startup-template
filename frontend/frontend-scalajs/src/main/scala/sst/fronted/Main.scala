@@ -11,6 +11,7 @@ object Main extends JSApp {
     appendPar(document.body, HelloWorld("from Scalajs").toString)
   }
 
+  @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
   def appendPar(targetNode: dom.Node, text: String): Unit = {
     val parNode = document.createElement("p")
     val textNode = document.createTextNode(text)

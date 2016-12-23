@@ -1,3 +1,4 @@
+
 lazy val `frontend-scalajs` = (project in file("."))
   .enablePlugins(ScalaJSPlugin, ScalaJSWeb)
   .dependsOn(LocalProject("sharedJS"))
@@ -5,3 +6,4 @@ lazy val `frontend-scalajs` = (project in file("."))
     libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.1",
     persistLauncher := true
   )
+  .settings(Linting.settings)
