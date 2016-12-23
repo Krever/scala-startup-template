@@ -7,3 +7,4 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.1.4")
 // code linting
 addSbtPlugin("com.sksamuel.scapegoat" %% "sbt-scapegoat" % "1.0.4")
 addSbtPlugin("org.wartremover" % "sbt-wartremover" % "1.2.1")
+addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "0.5.0")
