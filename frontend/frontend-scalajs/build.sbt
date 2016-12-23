@@ -1,4 +1,3 @@
-
 lazy val `frontend-scalajs` = (project in file("."))
   .enablePlugins(ScalaJSPlugin, ScalaJSWeb)
   .dependsOn(LocalProject("sharedJS"))

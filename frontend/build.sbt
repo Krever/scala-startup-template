@@ -1,4 +1,3 @@
-
 lazy val frontend = (project in file("."))
   .enablePlugins(SbtWeb)
   .settings(
