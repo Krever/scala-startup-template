@@ -13,6 +13,7 @@ lazy val backend = project
 
 lazy val frontend = project
 
+//Shared project config
 lazy val shared = crossProject.crossType(CrossType.Pure)
 lazy val sharedJs = shared.js
 lazy val sharedJvm = shared.jvm
