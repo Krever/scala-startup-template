@@ -1,17 +1,25 @@
 package sst.backend
 
-import sst.shared.HelloWorld
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.stream.ActorMaterializer
 
 object Main {
 
   def main(args: Array[String]): Unit = {
-    System.out.println(HelloWorld("from Scala"))
-//    while(true){}
-    if (args.length > 0)
-      Option(getClass.getClassLoader.getResource(args(0))) match {
-        case Some(url) => System.out.println(s"Resource found: $url")
-        case None => System.out.println("Resource not found")
-      }
+    implicit val system = ActorSystem("my-system")
+    implicit val materializer = ActorMaterializer()
+    implicit val executionContext = system.dispatcher
+
+    import akka.http.scaladsl.server.Directives._
+
+    val _ = Http().bindAndHandle(ApiRoutes.routes ~ FrontedRoutes.routes, "0.0.0.0", 8080)
+
+    println("Server online at http://localhost:8080/\nPress RETURN to stop...")
+//    StdIn.readLine()
+//    bindingFuture
+//      .flatMap(_.unbind())
+//      .onComplete(_ => system.terminate())
   }
 
 }

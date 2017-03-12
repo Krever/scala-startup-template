@@ -1,0 +1,54 @@
+package sst.shared
+
+import endpoints.algebra.CirceEntities
+
+@SuppressWarnings(Array("AsInstanceOf", "org.wartremover.warts.AsInstanceOf"))
+trait NotebookApi extends ApiBase with CirceEntities{
+
+  import io.circe.generic.auto._
+
+  private val allNotebooksPath: Path[Unit] = path / "notebooks"
+  private val singleNotebookPath = allNotebooksPath / segment[String]
+
+  val getNotebooks: Endpoint[Unit, Iterable[Notebook]] =
+    endpoint(
+      get(allNotebooksPath),
+      jsonResponse[Iterable[Notebook]]
+    )
+
+  val createNotebook: Endpoint[NotebookRequest, Notebook] =
+    endpoint(
+      post[Unit, NotebookRequest, Unit, NotebookRequest](
+        allNotebooksPath,
+        jsonRequest[NotebookRequest]),
+      jsonResponse[Notebook]
+    )
+
+  val deleteNotebook: Endpoint[String, Unit] =
+    endpoint(
+      request[String, Unit, Unit, String](
+        Delete,
+        singleNotebookPath),
+      emptyResponse
+    )
+
+  val updateNotebook: Endpoint[(String, NotebookRequest), Unit] = endpoint(
+    request[String, NotebookRequest, Unit, (String, NotebookRequest)](
+      Put,
+      singleNotebookPath,
+      jsonRequest[NotebookRequest]),
+    emptyResponse
+  )
+
+    val getNotesFromNotebook: Endpoint[String, Iterable[Note]] =
+      endpoint(
+        get(singleNotebookPath / "notes"),
+        jsonResponse[Iterable[Note]]
+      )
+
+}
+
+
+case class Notebook(id: String, name: String)
+
+case class NotebookRequest(name: String)

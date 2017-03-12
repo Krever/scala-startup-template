@@ -22,8 +22,8 @@ object Linting {
       "-Ywarn-unused",
       "-Ywarn-unused-import"
     ),
-    scapegoatVersion := "1.3.0",
-    compile in Compile := (compile in Compile dependsOn scapegoat).value,
-    wartremoverErrors ++= Warts.unsafe
+    scapegoatVersion := "1.3.0"//,
+//    compile in Compile := (compile in Compile dependsOn scapegoat).value,
+//    wartremoverErrors ++= Warts.unsafe
   )
 }
