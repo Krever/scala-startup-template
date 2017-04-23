@@ -9,7 +9,7 @@ trait NotesAPI extends Endpoints with CirceEntities {
   import io.circe.generic.auto._
 
   private val allNotesPath: Path[Unit] = path / "notes"
-  private val singleNotePath = allNotesPath / segment[String]
+  private val singleNotePath = allNotesPath / segment[Long]
 
   val createNote: Endpoint[NoteRequest, Unit] =
     endpoint(
@@ -19,16 +19,16 @@ trait NotesAPI extends Endpoints with CirceEntities {
       emptyResponse
     )
 
-  val deleteNote: Endpoint[String, Unit] =
+  val deleteNote: Endpoint[Long, Unit] =
     endpoint(
-      request[String, Unit, Unit, String](
+      request[Long, Unit, Unit, Long](
         Delete,
         singleNotePath),
       emptyResponse
     )
 
-  val updateNote: Endpoint[(String, NoteRequest), Unit] = endpoint(
-    request[String, NoteRequest, Unit, (String, NoteRequest)](
+  val updateNote: Endpoint[(Long, NoteRequest), Unit] = endpoint(
+    request[Long, NoteRequest, Unit, (Long, NoteRequest)](
       Put,
       singleNotePath,
       jsonRequest[NoteRequest]),
@@ -37,5 +37,5 @@ trait NotesAPI extends Endpoints with CirceEntities {
 
 }
 
-case class Note(id: String, title: String, content: String)
+case class Note(id: Long, title: String, content: String, notebookId: Long)
 case class NoteRequest(title: String, content: String)

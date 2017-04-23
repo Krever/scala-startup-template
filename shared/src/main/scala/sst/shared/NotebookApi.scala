@@ -8,7 +8,8 @@ trait NotebookApi extends ApiBase with CirceEntities{
   import io.circe.generic.auto._
 
   private val allNotebooksPath: Path[Unit] = path / "notebooks"
-  private val singleNotebookPath = allNotebooksPath / segment[String]
+  private val singleNotebookPath = allNotebooksPath / segment[Long]
+
 
   val getNotebooks: Endpoint[Unit, Iterable[Notebook]] =
     endpoint(
@@ -24,23 +25,23 @@ trait NotebookApi extends ApiBase with CirceEntities{
       jsonResponse[Notebook]
     )
 
-  val deleteNotebook: Endpoint[String, Unit] =
+  val deleteNotebook: Endpoint[Long, Unit] =
     endpoint(
-      request[String, Unit, Unit, String](
+      request[Long, Unit, Unit, Long](
         Delete,
         singleNotebookPath),
       emptyResponse
     )
 
-  val updateNotebook: Endpoint[(String, NotebookRequest), Unit] = endpoint(
-    request[String, NotebookRequest, Unit, (String, NotebookRequest)](
+  val updateNotebook: Endpoint[(Long, NotebookRequest), Unit] = endpoint(
+    request[Long, NotebookRequest, Unit, (Long, NotebookRequest)](
       Put,
       singleNotebookPath,
       jsonRequest[NotebookRequest]),
     emptyResponse
   )
 
-    val getNotesFromNotebook: Endpoint[String, Iterable[Note]] =
+    val getNotesFromNotebook: Endpoint[Long, Iterable[Note]] =
       endpoint(
         get(singleNotebookPath / "notes"),
         jsonResponse[Iterable[Note]]
@@ -49,6 +50,6 @@ trait NotebookApi extends ApiBase with CirceEntities{
 }
 
 
-case class Notebook(id: String, name: String)
+case class Notebook(id: Long, name: String)
 
 case class NotebookRequest(name: String)

@@ -15,7 +15,6 @@ object FrontedRoutes {
   import scala.collection.JavaConverters._
 
   private val config = ConfigFactory.load().getConfig("sst.backend.staticContent")
-//  private val serve = config.getBoolean("serve")
   private val resourcePaths = config.getStringList("resourcePaths").asScala
   private val paths = config.getStringList("paths").asScala
 

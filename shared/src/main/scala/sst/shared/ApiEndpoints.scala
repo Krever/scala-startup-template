@@ -5,6 +5,8 @@ trait ApiEndpoints extends NotebookApi with NotesAPI {
 
   import io.circe.generic.auto._
 
+  def apiBasePath: Path[Unit] = path / "api"
+
   val login: Endpoint[Credentials, Unit] =
     endpoint(
       post[Unit, Credentials, Unit, Credentials](
