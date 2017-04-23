@@ -7,32 +7,8 @@ import sst.fronted.service.ApiClient
 import sst.shared.{Notebook, NotebookRequest}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
-
-// Actions
-case object RefreshNotebooks extends Action
-
-case class UpdateAllNotebooks(notebooks: Seq[Notebook]) extends Action
-
-case class CreateOrUpdateNotebook(notebook: Notebook) extends Action
-
-//case class RefreshNotes(notebookId: Int) extends Action
-//
-//case class UpdateAllNotebooks(notebooks: Seq[Notebook]) extends Action
-//
-//case class UpdateAllNotes(notebookId: Int, notes: Seq[Note]) extends Action
-//
-//case class UpdateNotebook(notebook: Notebook) extends Action
-//
-//case class UpdateNote(note: Note) extends Action
-//
-//case class CreateNotebook(notebookRequest: NotebookRequest) extends Action
-//
-//case class CreateNote(noteRequest: NoteRequest) extends Action
-//
-//case class DeleteNotebook(notebook: Notebook) extends Action
-//
-//case class DeteleteNote(note: Note) extends Action
-
+import scala.scalajs.js
+import js.Dynamic.{ global => g }
 
 // The base model of our application
 case class RootModel(notebooks: Pot[Notebooks]/*, note: Pot[Notes]*/)
@@ -47,7 +23,7 @@ case class Notebooks(items: Seq[Notebook]) {
     }
   }
 
-//  def remove(item: Notebook) = Notebooks(items.filterNot(_ == item))
+  def remove(item: Notebook) = Notebooks(items.filterNot(_ == item))
 }
 
 //case class Notes(items: Map[Long, Seq[Note]]) {
@@ -73,22 +49,29 @@ case class Notebooks(items: Seq[Notebook]) {
 
 class NotebooksHandler[M](modelRW: ModelRW[M, Pot[Notebooks]]) extends ActionHandler(modelRW) {
   override def handle = {
-    case RefreshNotebooks =>
-      effectOnly(Effect(ApiClient.getNotebooks(()).toFuture.map(x => UpdateAllNotebooks(x.toSeq))))
-    case UpdateAllNotebooks(notebooks) =>
-      updated(Ready(Notebooks(notebooks)))
-    case CreateOrUpdateNotebook(notebook) =>
-      val effect = if(notebook.id == -1)
-        ApiClient.createNotebook(NotebookRequest(notebook.name))
-      else
-        ApiClient.updateNotebook((notebook.id, NotebookRequest(notebook.name)))
-      updated(value.map(_.updated(notebook)), Effect(effect.toFuture.map( _ => RefreshNotebooks)))
-//    case UpdateTodo(item) =>
-//      // make a local update and inform server
-//      updated(value.map(_.updated(item)), Effect(AjaxClient[Api].updateTodo(item).call().map(UpdateAllTodos)))
-//    case DeleteTodo(item) =>
-//      // make a local update and inform server
-//      updated(value.map(_.remove(item)), Effect(AjaxClient[Api].deleteTodo(item.id).call().map(UpdateAllTodos)))
+    case x =>
+      g.console.log(s"Handling $x")
+      x match {
+      case RefreshNotebooks =>
+        effectOnly(Effect(ApiClient.getNotebooks(()).toFuture.map(x => UpdateAllNotebooks(x.toSeq))))
+      case UpdateAllNotebooks(notebooks) =>
+        updated(Ready(Notebooks(notebooks)))
+      case CreateOrUpdateNotebook(notebook) =>
+        val effect = if (notebook.id == -1)
+          ApiClient.createNotebook(NotebookRequest(notebook.name))
+        else
+          ApiClient.updateNotebook((notebook.id, NotebookRequest(notebook.name)))
+        updated(value.map(_.updated(notebook)), Effect(effect.toFuture.map(_ => RefreshNotebooks)))
+      case DeleteNotebook(notebook) =>
+        updated(value.map(_.updated(notebook)), Effect(ApiClient.deleteNotebook(notebook.id).toFuture.map(_ => RefreshNotebooks)))
+
+      //    case UpdateTodo(item) =>
+      //      // make a local update and inform server
+      //      updated(value.map(_.updated(item)), Effect(AjaxClient[Api].updateTodo(item).call().map(UpdateAllTodos)))
+      //    case DeleteTodo(item) =>
+      //      // make a local update and inform server
+      //      updated(value.map(_.remove(item)), Effect(AjaxClient[Api].deleteTodo(item.id).call().map(UpdateAllTodos)))
+    }
   }
 }
 

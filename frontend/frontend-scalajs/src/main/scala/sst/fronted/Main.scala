@@ -13,7 +13,9 @@ object Main extends js.JSApp {
   @JSExport
   def main(): Unit = {
     val router = new SSTRouter
-    val _ = router.reactRouter().renderIntoDOM(dom.document.getElementById("root"))
+    val rootElem = dom.document.getElementById("root")
+//    rootElem.innerHTML =  ""
+    val _ = router.reactRouter().renderIntoDOM(rootElem)
   }
 
 }
