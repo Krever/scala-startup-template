@@ -3,6 +3,7 @@ package sst.backend
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
+import com.typesafe.config.ConfigFactory
 
 object Main {
 
@@ -10,11 +11,12 @@ object Main {
     implicit val system = ActorSystem("my-system")
     implicit val materializer = ActorMaterializer()
     implicit val executionContext = system.dispatcher
+    val config = ConfigFactory.load
 
     import akka.http.scaladsl.server.Directives._
 
     val address = "0.0.0.0"
-    val port = 8080
+    val port = config.getInt("sst.backend.port")
     val _ = Http().bindAndHandle(ApiRoutes.routes ~ FrontedRoutes.routes, address, port)
 
     println(s"Server online at http://$address:$port/")

@@ -20,9 +20,9 @@ object FrontedRoutes {
 
   private val contentAccessRoute = resourcePaths
     .map(path => getFromResourceDirectory(path))
-    .reduce(_ ~ _) ~ paths
+    .fold(reject)(_ ~ _) ~ paths
     .map(path => getFromDirectory(path))
-    .reduce(_ ~ _)
+    .fold(reject)(_ ~ _)
 
   val routes: Route = (get & pathPrefix(uiPrefix)) {
     pathEndOrSingleSlash {
