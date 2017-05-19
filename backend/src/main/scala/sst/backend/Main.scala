@@ -13,13 +13,13 @@ object Main {
 
     import akka.http.scaladsl.server.Directives._
 
-    val _ = Http().bindAndHandle(ApiRoutes.routes ~ FrontedRoutes.routes, "0.0.0.0", 8080)
+    val address = "0.0.0.0"
+    val port = 8080
+    val _ = Http().bindAndHandle(ApiRoutes.routes ~ FrontedRoutes.routes, address, port)
 
-    println("Server online at http://localhost:8080/\nPress RETURN to stop...")
-//    StdIn.readLine()
-//    bindingFuture
-//      .flatMap(_.unbind())
-//      .onComplete(_ => system.terminate())
+    println(s"Server online at http://$address:$port/")
+    println("Press RETURN to stop...")
+
   }
 
 }

@@ -5,4 +5,6 @@ sealed trait SSTRoute
 
 case object  NotebooksRoute extends SSTRoute
 
-case class SingleNotebookRoute(id : Long) extends SSTRoute
+case class NotebookDetailsRoute(notebookId : Long) extends SSTRoute
+
+case class NoteDetailsRoute(notebookId: Long, noteId: Long) extends SSTRoute

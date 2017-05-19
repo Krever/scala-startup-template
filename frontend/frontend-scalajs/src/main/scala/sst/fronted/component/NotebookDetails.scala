@@ -2,43 +2,56 @@ package sst.fronted.component
 
 import diode.data.Pot
 import diode.react.ModelProxy
-import japgolly.scalajs.react.{Callback, ScalaComponent}
 import japgolly.scalajs.react.component.Scala.Unmounted
+import japgolly.scalajs.react.extra.router.RouterCtl
 import japgolly.scalajs.react.vdom.html_<^._
-import sst.fronted.circuit.{DeleteNotebook, RefreshNotebooks}
+import japgolly.scalajs.react.{Callback, ScalaComponent}
+import org.scalajs.jquery.jQuery
+import sst.fronted.circuit.{DeleteNotebook, Notes, RefreshNotebooks}
+import sst.fronted.router.{NotebooksRoute, SSTRoute}
 import sst.shared.Notebook
+
 import scala.scalajs.js
-import js.Dynamic.{ global => g }
+
 
 object NotebookDetails {
 
   private val component = ScalaComponent.builder[Props]("NotebookDetails")
     .renderP { (_, props) =>
-      g.console.log(s"Rendering ${props.notebook}")
-      if(props.notebook.value.isReady) {
-        val model = props.notebook.value.get
+      if (props.model.value.notebook.isReady) {
+        val model = props.model.value.notebook.get
         <.div(
-          <.h2(
-            model.name
+          <.div(^.`class` := "ui basic clearing segment",
+            <.div(^.`class` := "ui breadcrumb",
+              props.ctl.link(NotebooksRoute)(^.`class` := "section", "Notebooks"),
+              <.div(^.`class` := "divider", "/"),
+              <.div(^.`class` := "active section", model.name)
+            ),
+            <.button(
+              ^.`class` := "ui right floated icon button",
+              ^.onClick --> props.model.dispatchCB(DeleteNotebook(model)).flatMap(_ => props.ctl.set(NotebooksRoute)),
+              <.i(^.`class` := "trash icon")
+            ),
+            <.button(
+              ^.`class` := "ui right floated icon button",
+              ^.onClick --> Callback(jQuery("#rename-modal").asInstanceOf[js.Dynamic].modal("show")),
+              <.i(^.`class` := "edit icon")
+            )
           ),
-          <.button(^.`class` := "ui button",
-            "Rename"
-          ),
-          <.button(
-            ^.`class` := "ui negative button",
-            ^.onClick --> props.notebook.dispatchCB(DeleteNotebook(model)),
-            "Delete"
-          )
+          NotesList(props.ctl, props.currentLoc, model.id, props.model.zoom(_.notes)),
+          NotebookRenameModal(props.model.zoom(_.notebook.get))
         )
       } else {
         <.div
       }
     }
-    .componentDidMount(scope => Callback.when(!scope.props.notebook.value.isReady)(scope.props.notebook.dispatchCB(RefreshNotebooks)))
+    .componentDidMount(scope => Callback.when(!scope.props.model.value.notebook.isReady)(scope.props.model.dispatchCB(RefreshNotebooks)))
     .build
 
-  def apply(proxy: ModelProxy[Pot[Notebook]]): Unmounted[Props, Unit, Unit] = component(Props(proxy))
+  def apply(ctl: RouterCtl[SSTRoute], currentLoc: SSTRoute, proxy: ModelProxy[Model]): Unmounted[Props, Unit, Unit] = component(Props(ctl, currentLoc, proxy))
 
-  case class Props(notebook: ModelProxy[Pot[Notebook]])
+  case class Props(ctl: RouterCtl[SSTRoute], currentLoc: SSTRoute, model: ModelProxy[Model])
+
+  case class Model(notebook: Pot[Notebook], notes: Pot[Notes])
 
 }

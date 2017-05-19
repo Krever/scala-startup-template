@@ -38,4 +38,4 @@ trait NotesAPI extends Endpoints with CirceEntities {
 }
 
 case class Note(id: Long, title: String, content: String, notebookId: Long)
-case class NoteRequest(title: String, content: String)
+case class NoteRequest(title: String, content: String, notebookId: Long)

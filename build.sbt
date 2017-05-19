@@ -7,7 +7,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "scala-startup-template",
     version in ThisBuild := "0.1.0",
-    scalaVersion in ThisBuild := "2.12.1",
+    scalaVersion in ThisBuild := "2.12.2",
     mainClass in Compile := Some("sst.backend.Main")
   )
   .settings(Linting.settings)
