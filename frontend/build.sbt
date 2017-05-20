@@ -1,5 +1,7 @@
 lazy val frontend = (project in file("."))
+  .aggregate(`frontend-scalajs`)
   .enablePlugins(SbtWeb)
+  .enablePlugins(ScalafmtPlugin)
   .settings(
     pipelineStages in Assets := Seq(scalaJSPipeline),
     scalaJSProjects := Seq(`frontend-scalajs`),

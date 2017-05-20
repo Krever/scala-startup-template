@@ -9,12 +9,10 @@ import japgolly.scalajs.react.vdom.html_<^._
 import sst.fronted.circuit.Notebooks
 import sst.fronted.router.SSTRoute
 
-
-
 object Dashboard {
 
-  private val component = ScalaComponent.builder[Props]("Dashboard")
-    // create and store the connect proxy in state for later use
+  private val component = ScalaComponent
+    .builder[Props]("Dashboard")
     .initialStateFromProps(props => State(props.proxy.connect(m => m)))
     .renderPS { (_, props, state) =>
       <.div(
@@ -23,9 +21,12 @@ object Dashboard {
     }
     .build
 
-  def apply(router: RouterCtl[SSTRoute], proxy: ModelProxy[Pot[Notebooks]]): Unmounted[Props, State, Unit] = component(Props(router, proxy))
+  def apply(router: RouterCtl[SSTRoute],
+            proxy: ModelProxy[Pot[Notebooks]]): Unmounted[Props, State, Unit] =
+    component(Props(router, proxy))
 
-  case class Props(router: RouterCtl[SSTRoute], proxy: ModelProxy[Pot[Notebooks]])
+  case class Props(router: RouterCtl[SSTRoute],
+                   proxy: ModelProxy[Pot[Notebooks]])
 
   case class State(notebooksWrapper: ReactConnectProxy[Pot[Notebooks]])
 

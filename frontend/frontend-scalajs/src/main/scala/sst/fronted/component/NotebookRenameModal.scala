@@ -13,12 +13,14 @@ import sst.shared.Notebook
 
 object NotebookRenameModal {
 
-  private val component = ScalaComponent.builder[Props]("Notes")
+  private val component = ScalaComponent
+    .builder[Props]("Notes")
     .initialStateFromProps(p => State(p.proxy.value.name))
     .renderBackend[Backend]
     .build
 
-  def apply(proxy: ModelProxy[Notebook]): Unmounted[Props, State, Backend] = component(Props(proxy))
+  def apply(proxy: ModelProxy[Notebook]): Unmounted[Props, State, Backend] =
+    component(Props(proxy))
 
   case class Props(proxy: ModelProxy[Notebook])
 
@@ -34,30 +36,35 @@ object NotebookRenameModal {
 
     def render(props: Props, state: State): TagOf[Div] = {
       <.div(
-        ^.`class` := "ui modal", ^.id := "rename-modal",
+        ^.`class` := "ui modal",
+        ^.id := "rename-modal",
         <.div(^.`class` := "header", "Rename notebook"),
-        <.div(^.`class` := "description",
-          <.div(^.`class` := "segment",
-            <.div(^.`class` := "ui form",
+        <.div(
+          ^.`class` := "description",
+          <.div(
+            ^.`class` := "segment",
+            <.div(
+              ^.`class` := "ui form",
               <.div(^.`class` := "inline fields",
-                <.div(^.`class` := "field",
-                  <.label("Name"),
-                  <.input(
-                    ^.id := "name-field",
-                    ^.value := state.notebookName,
-                    ^.onChange ==> updateName
-                  )
-                )
-              )
+                    <.div(^.`class` := "field",
+                          <.label("Name"),
+                          <.input(
+                            ^.id := "name-field",
+                            ^.value := state.notebookName,
+                            ^.onChange ==> updateName
+                          )))
             )
           )
         ),
-        <.div(^.`class` := "actions",
+        <.div(
+          ^.`class` := "actions",
           <.div(^.`class` := "ui black deny button", "Cancel"),
-          <.div(^.`class` := "ui positive right labeled icon button",
+          <.div(
+            ^.`class` := "ui positive right labeled icon button",
             "Save",
             <.i(^.`class` := "checkmark icon"),
-            ^.onClick --> props.proxy.dispatchCB(UpdateNotebook(props.proxy.value.copy(name = state.notebookName)))
+            ^.onClick --> props.proxy.dispatchCB(UpdateNotebook(
+              props.proxy.value.copy(name = state.notebookName)))
           )
         )
       )

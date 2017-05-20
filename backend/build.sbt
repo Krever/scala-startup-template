@@ -1,5 +1,6 @@
 lazy val backend = (project in file("."))
   .enablePlugins(JavaAppPackaging)
+  .enablePlugins(ScalafmtPlugin)
   .dependsOn(LocalProject("sharedJVM"))
   .settings(
     libraryDependencies ++= Seq(

@@ -1,5 +1,6 @@
 lazy val `frontend-scalajs` = (project in file("."))
   .enablePlugins(ScalaJSPlugin, ScalaJSWeb)
+  .enablePlugins(ScalafmtPlugin)
   .dependsOn(LocalProject("sharedJS"))
   .settings(
     resolvers += Resolver.mavenLocal,

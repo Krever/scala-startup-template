@@ -3,6 +3,7 @@ lazy val root = (project in file("."))
   .dependsOn(frontend, backend)
   .enablePlugins(JavaAppPackaging)
   .enablePlugins(DockerPlugin)
+  .enablePlugins(ScalafmtPlugin)
   .settings(
     name := "scala-startup-template",
     version in ThisBuild := "0.1.0",
@@ -25,6 +26,7 @@ lazy val frontend = project
 //Shared project config
 lazy val shared = crossProject
   .crossType(CrossType.Pure)
+  .enablePlugins(ScalafmtPlugin)
   .settings(Linting.settings)
   .settings(
     resolvers +=  Resolver.mavenLocal,

@@ -17,7 +17,9 @@ object Main {
 
     val address = "0.0.0.0"
     val port = config.getInt("sst.backend.port")
-    val _ = Http().bindAndHandle(ApiRoutes.routes ~ FrontedRoutes.routes, address, port)
+    val _ = Http().bindAndHandle(ApiRoutes.routes ~ FrontedRoutes.routes,
+                                 address,
+                                 port)
 
     println(s"Server online at http://$address:$port/")
     println("Press RETURN to stop...")

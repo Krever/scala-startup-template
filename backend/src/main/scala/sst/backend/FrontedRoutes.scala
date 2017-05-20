@@ -14,7 +14,8 @@ object FrontedRoutes {
   val uiPrefix = ""
   import scala.collection.JavaConverters._
 
-  private val config = ConfigFactory.load().getConfig("sst.backend.staticContent")
+  private val config =
+    ConfigFactory.load().getConfig("sst.backend.staticContent")
   private val resourcePaths = config.getStringList("resourcePaths").asScala
   private val paths = config.getStringList("paths").asScala
 

@@ -6,7 +6,6 @@ import sst.fronted.router.SSTRouter
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 
-
 @JSExportTopLevel("Main")
 object Main extends js.JSApp {
 

@@ -8,28 +8,49 @@ import japgolly.scalajs.react.extra.router.RouterCtl
 import japgolly.scalajs.react.vdom.html_<^._
 import japgolly.scalajs.react.{BackendScope, Callback, ScalaComponent}
 import slogging.LazyLogging
-import sst.fronted.circuit.{DeleteNote, RefreshNotebooks, RefreshNotes, UpdateNote}
-import sst.fronted.router.{NoteDetailsRoute, NotebookDetailsRoute, NotebooksRoute, SSTRoute}
+import sst.fronted.circuit.{
+  DeleteNote,
+  RefreshNotebooks,
+  RefreshNotes,
+  UpdateNote
+}
+import sst.fronted.router.{
+  NoteDetailsRoute,
+  NotebookDetailsRoute,
+  NotebooksRoute,
+  SSTRoute
+}
 import sst.shared.{Note, Notebook}
-
 
 object NoteDetails extends LazyLogging {
 
-  private val component = ScalaComponent.builder[Props]("NotebookDetails")
-    .initialStateFromProps(p => State(p.model.value.note.getOrElse(Note(-1, "", "", p.currentLoc.notebookId))))
+  private val component = ScalaComponent
+    .builder[Props]("NotebookDetails")
+    .initialStateFromProps(p =>
+      State(p.model.value.note.getOrElse(
+        Note(-1, "", "", p.currentLoc.notebookId))))
     .renderBackend[Backend]
     .componentDidMount(scope =>
       for {
-        _ <- Callback.when(!scope.props.model.value.notebook.isReady)(scope.props.model.dispatchCB(RefreshNotebooks))
-        _ <- Callback.when(!scope.props.model.value.note.isReady)(scope.props.model.dispatchCB(RefreshNotes(scope.props.currentLoc.notebookId)))
-      } yield ()
-    ).build
+        _ <- Callback.when(!scope.props.model.value.notebook.isReady)(
+          scope.props.model.dispatchCB(RefreshNotebooks))
+        _ <- Callback.when(!scope.props.model.value.note.isReady)(
+          scope.props.model.dispatchCB(
+            RefreshNotes(scope.props.currentLoc.notebookId)))
+      } yield ())
+    .build
 
-  def apply(ctl: RouterCtl[SSTRoute], currentLoc: NoteDetailsRoute, proxy: ModelProxy[Model]): Unmounted[Props, State, Backend] = component(Props(ctl, currentLoc, proxy))
+  def apply(ctl: RouterCtl[SSTRoute],
+            currentLoc: NoteDetailsRoute,
+            proxy: ModelProxy[Model]): Unmounted[Props, State, Backend] =
+    component(Props(ctl, currentLoc, proxy))
 
-  private def isReady(model: Model): Boolean = model.note.isReady && model.notebook.isReady
+  private def isReady(model: Model): Boolean =
+    model.note.isReady && model.notebook.isReady
 
-  case class Props(ctl: RouterCtl[SSTRoute], currentLoc: NoteDetailsRoute, model: ModelProxy[Model])
+  case class Props(ctl: RouterCtl[SSTRoute],
+                   currentLoc: NoteDetailsRoute,
+                   model: ModelProxy[Model])
 
   case class State(note: Note)
 
@@ -43,38 +64,41 @@ object NoteDetails extends LazyLogging {
         val notebook = p.model.value.notebook.get
         val note = s.note
         <.div(
-          <.div(^.`class` := "ui basic clearing segment",
-            <.div(^.`class` := "ui breadcrumb",
+          <.div(
+            ^.`class` := "ui basic clearing segment",
+            <.div(
+              ^.`class` := "ui breadcrumb",
               p.ctl.link(NotebooksRoute)(^.`class` := "section", "Notebooks"),
               <.div(^.`class` := "divider", "/"),
-              p.ctl.link(NotebookDetailsRoute(p.currentLoc.notebookId))(^.`class` := "section", notebook.name),
+              p.ctl.link(NotebookDetailsRoute(p.currentLoc.notebookId))(
+                ^.`class` := "section",
+                notebook.name),
               <.div(^.`class` := "divider", "/"),
-              <.div(^.`class` := "active section", p.model.value.note.get.title)
+              <.div(^.`class` := "active section",
+                    p.model.value.note.get.title)
             ),
             <.button(
               ^.`class` := "ui right floated icon button",
-              ^.onClick --> p.ctl.set(NotebookDetailsRoute(notebook.id)).flatMap(_ => p.model.dispatchCB(DeleteNote(note))),
+              ^.onClick --> p.ctl
+                .set(NotebookDetailsRoute(notebook.id))
+                .flatMap(_ => p.model.dispatchCB(DeleteNote(note))),
               <.i(^.`class` := "trash icon")
             )
           ),
-          <.div(^.`class` := "ui form",
+          <.div(
+            ^.`class` := "ui form",
             <.div(^.`class` := "field",
-              <.label("Title"),
-              <.input(
-                ^.onChange ==> updateTitle,
-                ^.value := note.title
-              )
-            ),
+                  <.label("Title"),
+                  <.input(
+                    ^.onChange ==> updateTitle,
+                    ^.value := note.title
+                  )),
             <.div(^.`class` := "field",
-              <.label("Content"),
-              <.textarea(
-                ^.onChange ==> updateContent,
-                note.content)
-            ),
-            <.button(
-              ^.`class` := "ui button",
-              ^.onClick --> p.model.dispatchCB(UpdateNote(note)),
-              "Save")
+                  <.label("Content"),
+                  <.textarea(^.onChange ==> updateContent, note.content)),
+            <.button(^.`class` := "ui button",
+                     ^.onClick --> p.model.dispatchCB(UpdateNote(note)),
+                     "Save")
           )
         )
       } else {
