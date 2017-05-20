@@ -14,7 +14,7 @@ import sst.shared.Notebook
 object NotebookRenameModal {
 
   private val component = ScalaComponent.builder[Props]("Notes")
-    .initialState_P(p => State(p.proxy.value.name))
+    .initialStateFromProps(p => State(p.proxy.value.name))
     .renderBackend[Backend]
     .build
 

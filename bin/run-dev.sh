@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #Optional, uncomment if you are modifying dependencies or index.html
-#sbt '~frontend/webStage' &
+sbt 'frontend/webStage'
 
 sbt '~backend/re-start ---
     -Dsst.backend.staticContent.serve=true

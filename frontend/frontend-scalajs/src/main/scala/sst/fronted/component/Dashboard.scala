@@ -15,7 +15,7 @@ object Dashboard {
 
   private val component = ScalaComponent.builder[Props]("Dashboard")
     // create and store the connect proxy in state for later use
-    .initialState_P(props => State(props.proxy.connect(m => m)))
+    .initialStateFromProps(props => State(props.proxy.connect(m => m)))
     .renderPS { (_, props, state) =>
       <.div(
         <.h2("Dashboard")

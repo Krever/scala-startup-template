@@ -16,7 +16,7 @@ import sst.shared.{Note, Notebook}
 object NoteDetails extends LazyLogging {
 
   private val component = ScalaComponent.builder[Props]("NotebookDetails")
-    .initialState_P(p => State(p.model.value.note.getOrElse(Note(-1, "", "", p.currentLoc.notebookId))))
+    .initialStateFromProps(p => State(p.model.value.note.getOrElse(Note(-1, "", "", p.currentLoc.notebookId))))
     .renderBackend[Backend]
     .componentDidMount(scope =>
       for {
