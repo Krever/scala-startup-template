@@ -1,9 +1,8 @@
-import wartremover.Warts
-
 lazy val root = (project in file("."))
   .aggregate(frontend, backend)
   .dependsOn(frontend, backend)
   .enablePlugins(JavaAppPackaging)
+  .enablePlugins(DockerPlugin)
   .settings(
     name := "scala-startup-template",
     version in ThisBuild := "0.1.0",
@@ -12,7 +11,10 @@ lazy val root = (project in file("."))
     mappings in Universal <++= (WebKeys.stage in frontend) map { dir =>
       ((dir.*** --- dir) pair relativeTo(dir)).map(x => (x._1, "webstage/"+x._2))
     },
-    scriptClasspath in bashScriptDefines ~= (cp => "../webstage" +: cp)
+    scriptClasspath in bashScriptDefines ~= (cp => "../webstage" +: cp),
+    dockerRepository in Docker := Some("registry.gitlab.com/w-pitula"),
+    dockerUpdateLatest in Docker := true,
+    aggregate in Docker := false
   )
   .settings(Linting.settings)
 
@@ -27,8 +29,8 @@ lazy val shared = crossProject
   .settings(
     resolvers +=  Resolver.mavenLocal,
     libraryDependencies ++= Seq(
-      "org.julienrf" %% "endpoints-algebra" % "0.2.0-09602e4",
-      "org.julienrf" %% "endpoints-algebra-circe" % "0.2.0-09602e4"
+      "org.julienrf" %% "endpoints-algebra" % "0.2.0",
+      "org.julienrf" %% "endpoints-algebra-circe" % "0.2.0"
     )
   )
 

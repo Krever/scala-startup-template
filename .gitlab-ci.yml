@@ -1,0 +1,9 @@
+build_image:
+  image: e8kor/sbt-docker
+  services:
+  - docker:dind
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - sbt clean docker:publish
+  only:
+    - master

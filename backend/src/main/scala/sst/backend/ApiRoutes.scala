@@ -8,7 +8,7 @@ import sst.shared.{ApiEndpoints, Note, Notebook}
 import scala.util.Random
 
 
-object ApiRoutes extends ApiEndpoints with akkahttp.routing.Endpoints with akkahttp.routing.CirceEntities {
+object ApiRoutes extends ApiEndpoints with akkahttp.server.Endpoints with akkahttp.server.CirceEntities {
 
   private var notebooks = (1L to 6L)
     .map(i => Notebook(randomId(), s"Notebook $i"))
