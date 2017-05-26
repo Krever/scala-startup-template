@@ -11,6 +11,7 @@ lazy val frontend = (project in file("."))
       "org.webjars.bower" % "semantic-ui" % "2.2.9",
       "org.webjars" % "jquery" % "2.1.3"
     )
+    ,devCommands in scalaJSPipeline ++= Seq("assets")
   )
   .settings(Linting.settings)
 
