@@ -11,7 +11,9 @@ lazy val backend = (project in file("."))
       "com.byteslounge" %% "slick-repo" % "1.4.3",
       "org.flywaydb" % "flyway-core" % "4.2.0",
       "org.xerial" % "sqlite-jdbc" % "3.18.0",
-      "biz.enef" %% "slogging" % "0.5.2"
+      "biz.enef" %% "slogging" % "0.5.2",
+      "biz.enef" %% "slogging-slf4j" % "0.5.2",
+      "org.slf4j" % "slf4j-log4j12" % "1.7.25"
     ),
     Revolver.enableDebugging(port = 5050, suspend = false)
   )
