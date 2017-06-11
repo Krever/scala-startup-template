@@ -1,4 +1,4 @@
-package sst.backend
+package sst.backend.routes
 
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route

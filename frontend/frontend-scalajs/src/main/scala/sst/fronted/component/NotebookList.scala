@@ -9,9 +9,9 @@ import japgolly.scalajs.react.vdom.TagOf
 import japgolly.scalajs.react.vdom.html_<^._
 import org.scalajs.dom.html.Div
 import slogging.LazyLogging
-import sst.fronted.circuit.{Notebooks, RefreshNotebooks, UpdateNotebook}
+import sst.fronted.circuit.{CreateNotebook, Notebooks, RefreshNotebooks}
 import sst.fronted.router.{NotebookDetailsRoute, SSTRoute}
-import sst.shared.Notebook
+import sst.shared.NotebookRequest
 
 object NotebookList extends LazyLogging {
 
@@ -46,7 +46,7 @@ object NotebookList extends LazyLogging {
           <.a(
             ^.`class` := "item",
             ^.onClick --> props.proxy.dispatchCB(
-              UpdateNotebook(Notebook(-1, "New Notebook"))),
+              CreateNotebook(NotebookRequest("New Notebook"))),
             <.i(^.`class` := "plus icon"),
             "Create new notebook"
           ),

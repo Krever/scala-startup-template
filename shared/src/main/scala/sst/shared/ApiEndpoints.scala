@@ -1,7 +1,7 @@
 package sst.shared
 
 @SuppressWarnings(Array("AsInstanceOf", "org.wartremover.warts.AsInstanceOf"))
-trait ApiEndpoints extends NotebookApi with NotesAPI {
+trait ApiEndpoints extends ApiBase with NotebookApi with NotesAPI {
 
   import io.circe.generic.auto._
 

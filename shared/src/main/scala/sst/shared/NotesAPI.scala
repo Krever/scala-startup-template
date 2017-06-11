@@ -1,14 +1,14 @@
 package sst.shared
 
-import endpoints.algebra.{CirceEntities, Endpoints}
+import endpoints.algebra.CirceEntities
 
 
 @SuppressWarnings(Array("AsInstanceOf", "org.wartremover.warts.AsInstanceOf"))
-trait NotesAPI extends Endpoints with CirceEntities {
+trait NotesAPI extends CirceEntities { self: ApiBase =>
 
   import io.circe.generic.auto._
 
-  private val allNotesPath: Path[Unit] = path / "notes"
+  private val allNotesPath: Path[Unit] = apiBasePath / "notes"
   private val singleNotePath = allNotesPath / segment[Long]
 
   val createNote: Endpoint[NoteRequest, Unit] =

@@ -3,11 +3,11 @@ package sst.shared
 import endpoints.algebra.CirceEntities
 
 @SuppressWarnings(Array("AsInstanceOf", "org.wartremover.warts.AsInstanceOf"))
-trait NotebookApi extends ApiBase with CirceEntities{
+trait NotebookApi extends CirceEntities { self: ApiBase =>
 
   import io.circe.generic.auto._
 
-  private val allNotebooksPath: Path[Unit] = path / "notebooks"
+  private val allNotebooksPath: Path[Unit] = apiBasePath / "notebooks"
   private val singleNotebookPath = allNotebooksPath / segment[Long]
 
 

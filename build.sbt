@@ -9,8 +9,11 @@ lazy val root = (project in file("."))
     version in ThisBuild := "0.1.0",
     scalaVersion in ThisBuild := "2.12.2",
     mainClass in Compile := Some("sst.backend.Main"),
-    mappings in Universal <++= (WebKeys.stage in frontend) map { dir =>
-      ((dir.*** --- dir) pair relativeTo(dir)).map(x => (x._1, "webstage/"+x._2))
+    mappings in Universal ++= {
+      (WebKeys.stage in frontend).map { dir =>
+        ((dir.*** --- dir) pair relativeTo(dir))
+          .map(x => (x._1, "webstage/"+x._2))
+      }.value
     },
     scriptClasspath in bashScriptDefines ~= (cp => "../webstage" +: cp),
     dockerRepository in Docker := Some("registry.gitlab.com/w-pitula"),

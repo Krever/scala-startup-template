@@ -5,7 +5,13 @@ lazy val backend = (project in file("."))
   .settings(
     libraryDependencies ++= Seq(
       "org.julienrf" %% "endpoints-akka-http-server" % "0.2.0",
-      "org.julienrf" %% "endpoints-akka-http-server-circe" % "0.2.0"
+      "org.julienrf" %% "endpoints-akka-http-server-circe" % "0.2.0",
+      "com.typesafe.slick" %% "slick" % "3.2.0",
+      "com.typesafe.slick" %% "slick-hikaricp" % "3.2.0",
+      "com.byteslounge" %% "slick-repo" % "1.4.3",
+      "org.flywaydb" % "flyway-core" % "4.2.0",
+      "org.xerial" % "sqlite-jdbc" % "3.18.0",
+      "biz.enef" %% "slogging" % "0.5.2"
     ),
     Revolver.enableDebugging(port = 5050, suspend = false)
   )
