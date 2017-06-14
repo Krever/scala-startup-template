@@ -9,7 +9,7 @@ import slogging.{LazyLogging, LoggerConfig}
 import sst.backend.data._
 import sst.backend.data.tables.{NotebooksRepository, NotesRepository}
 import sst.backend.routes.{ApiRoutes, FrontedRoutes}
-import sst.backend.util.AccessLogHelper
+import sst.backend.util.{AccessLogHelper, SessionHelper}
 
 import scala.util.{Failure, Success}
 
@@ -30,7 +30,8 @@ object Main extends LazyLogging {
     val dbConfig = new DBConfig(config)
     val dbExecutor = new DBExecutor(slickProfile, dbConfig)
     val dbMigrator = new DBMigrator(dbConfig)
-    val apiRoutes = new ApiRoutes(notesRepository, notebooksRepository, dbExecutor)
+    val sessionHelper = new SessionHelper(config)
+    val apiRoutes = new ApiRoutes(notesRepository, notebooksRepository, dbExecutor, sessionHelper)
 
     import akka.http.scaladsl.server.Directives._
 

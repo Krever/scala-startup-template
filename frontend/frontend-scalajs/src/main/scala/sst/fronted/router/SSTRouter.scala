@@ -1,21 +1,12 @@
 package sst.fronted.router
 
 import diode.data.Pot
-import japgolly.scalajs.react.extra.router.{
-  BaseUrl,
-  Redirect,
-  Resolution,
-  Router,
-  RouterConfigDsl,
-  RouterCtl
-}
+import japgolly.scalajs.react.CallbackTo
+import japgolly.scalajs.react.extra.router.{Action, BaseUrl, Redirect, Resolution, Router, RouterConfigDsl, RouterCtl}
 import japgolly.scalajs.react.vdom.html_<^.{<, _}
 import sst.fronted.circuit.SSTCircuit
-import sst.fronted.component.{NoteDetails, NotebookDetails, NotebookList}
+import sst.fronted.component.{LoginForm, NoteDetails, NotebookDetails, NotebookList}
 
-/**
-  * Created by wpitula on 4/22/17.
-  */
 class SSTRouter {
 
   val reactRouter = Router(BaseUrl.until_#, routerConfig)
@@ -29,8 +20,14 @@ class SSTRouter {
         import dsl._
         (notebooksRoute
           | notebookDetailsRoute
-          | notesRoute).notFound(
-          redirectToPage(NotebooksRoute)(Redirect.Replace))
+          | notesRoute
+          | staticRoute("#login", LoginRoute(None)) ~> renderLogin()
+          )
+          .addCondition(CallbackTo(SSTCircuit.zoom(_.session).value.isDefined)) { route =>
+            Some(renderLogin(Some(route)))
+          }
+          .notFound(redirectToPage(NotebooksRoute)(Redirect.Replace))
+
       }
       .renderWith(layout)
 
@@ -53,8 +50,17 @@ class SSTRouter {
     )
   }
 
-  private def notebooksRoute(
-      implicit dsl: RouterConfigDsl[SSTRoute]): dsl.Rule = {
+  private def renderLogin(route: Option[SSTRoute] = None)(implicit dsl: RouterConfigDsl[SSTRoute]): Action[SSTRoute] = {
+    import dsl._
+    renderR {
+      rCtl =>
+        val wrapper = SSTCircuit.connect(m => m.session)
+        wrapper(proxy => LoginForm(rCtl, route, proxy))
+    }
+  }
+
+
+  private def notebooksRoute(implicit dsl: RouterConfigDsl[SSTRoute]): dsl.Rule = {
     import dsl._
     staticRoute(root, NotebooksRoute) ~> renderR(ctl =>
       notebooksWrapper(proxy => NotebookList(ctl, NotebooksRoute, proxy)))

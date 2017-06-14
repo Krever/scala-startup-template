@@ -9,7 +9,8 @@ lazy val frontend = (project in file("."))
     libraryDependencies ++= Seq(
       "org.webjars.bower" % "react" % "15.4.2",
       "org.webjars.bower" % "semantic-ui" % "2.2.9",
-      "org.webjars" % "jquery" % "2.1.3"
+      "org.webjars" % "jquery" % "2.1.3",
+      "org.webjars.bower" % "jwt-client" % "0.2.1"
     )
     ,devCommands in scalaJSPipeline ++= Seq("assets")
   )

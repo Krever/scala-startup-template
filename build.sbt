@@ -34,8 +34,8 @@ lazy val shared = crossProject
   .settings(
     resolvers +=  Resolver.mavenLocal,
     libraryDependencies ++= Seq(
-      "org.julienrf" %% "endpoints-algebra" % "0.2.0",
-      "org.julienrf" %% "endpoints-algebra-circe" % "0.2.0"
+      "org.julienrf" %% "endpoints-algebra" % "0.3.0-1-SNAPSHOT",
+      "org.julienrf" %% "endpoints-algebra-circe" % "0.3.0-1-SNAPSHOT"
     )
   )
 

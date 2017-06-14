@@ -1,9 +1,8 @@
 package sst.shared
 
-import endpoints.algebra.CirceEntities
-
 @SuppressWarnings(Array("AsInstanceOf", "org.wartremover.warts.AsInstanceOf"))
-trait NotebookApi extends CirceEntities { self: ApiBase =>
+trait NotebookApi {
+  self: ApiBase =>
 
   import io.circe.generic.auto._
 
@@ -11,11 +10,12 @@ trait NotebookApi extends CirceEntities { self: ApiBase =>
   private val singleNotebookPath = allNotebooksPath / segment[Long]
 
 
-  val getNotebooks: Endpoint[Unit, Iterable[Notebook]] =
-    endpoint(
-      get(allNotebooksPath),
-      jsonResponse[Iterable[Notebook]]
-    )
+  val getNotebooks: Endpoint[RawSession[Session], Option[Iterable[Notebook]]] =
+    anEndpoint
+      .withMethod(Get)
+      .withUrl(allNotebooksPath)
+      .withJsonResponse[Iterable[Notebook]]
+      .buildSessionSecured[Unit, RawSession[Session]]
 
   val createNotebook: Endpoint[NotebookRequest, Notebook] =
     endpoint(
@@ -41,11 +41,11 @@ trait NotebookApi extends CirceEntities { self: ApiBase =>
     emptyResponse
   )
 
-    val getNotesFromNotebook: Endpoint[Long, Iterable[Note]] =
-      endpoint(
-        get(singleNotebookPath / "notes"),
-        jsonResponse[Iterable[Note]]
-      )
+  val getNotesFromNotebook: Endpoint[Long, Iterable[Note]] =
+    endpoint(
+      get(singleNotebookPath / "notes"),
+      jsonResponse[Iterable[Note]]
+    )
 
 }
 

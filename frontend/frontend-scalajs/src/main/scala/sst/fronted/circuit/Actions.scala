@@ -24,3 +24,12 @@ case class CreateNote(noteRequest: NoteRequest) extends Action
 case class UpdateNote(note: Note) extends Action
 
 case class DeleteNote(note: Note) extends Action
+
+
+// Authentication test
+case class Login(username: String, password: String) extends Action
+
+case class SetSession(session: String) extends Action
+
+case class Error(msg: String) extends Action
+

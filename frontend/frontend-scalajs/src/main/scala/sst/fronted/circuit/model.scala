@@ -3,7 +3,8 @@ package sst.fronted.circuit
 import diode.data.Pot
 import sst.shared.{Note, Notebook}
 
-case class RootModel(notebooks: Pot[Notebooks], notes: Pot[Notes])
+case class AuthToken(jwtString: String)
+case class RootModel(notebooks: Pot[Notebooks], notes: Pot[Notes], session: Option[AuthToken])
 
 case class Notebooks(items: Seq[Notebook]) {
   def updated(newItem: Notebook): Notebooks = {

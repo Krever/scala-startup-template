@@ -1,10 +1,8 @@
 package sst.shared
 
-import endpoints.algebra.CirceEntities
-
 
 @SuppressWarnings(Array("AsInstanceOf", "org.wartremover.warts.AsInstanceOf"))
-trait NotesAPI extends CirceEntities { self: ApiBase =>
+trait NotesAPI { self: ApiBase =>
 
   import io.circe.generic.auto._
 

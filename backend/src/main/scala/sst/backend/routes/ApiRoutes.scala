@@ -1,29 +1,49 @@
 package sst.backend.routes
 
+import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.Route
-import endpoints.akkahttp
+import akka.http.scaladsl.server.{Directives, Route}
+import endpoints.{Tupler, akkahttp}
 import sst.backend.data._
 import sst.backend.data.tables.{NoteEntity, NotebookEntity, NotebooksRepository, NotesRepository}
+import sst.backend.util.SessionHelper
 import sst.shared._
 
 import scala.concurrent.ExecutionContext
 
 class ApiRoutes(notesRepo: NotesRepository,
                 notebooksRepo: NotebooksRepository,
-                db: DBExecutor)(implicit ec: ExecutionContext)
+                db: DBExecutor,
+                sessionHelper: SessionHelper)(implicit ec: ExecutionContext)
   extends ApiEndpoints
     with akkahttp.server.Endpoints
     with akkahttp.server.CirceEntities {
 
+  type RawSession[T] = T
+  def sessionReqHeader: RequestHeaders[RawSession[Session]] = sessionHelper.requireSession
+
+  def sessionSet[T](resp: Response[T])(implicit tupler: Tupler[T, RawSession[Session]]): Response[tupler.Out] =
+    (out: tupler.Out) => {
+      val (t, session) = tupler.unapply(out)
+      sessionHelper.setSession(session){
+        resp(t)
+      }
+    }
+
+  override def authorized[T](response: (T) => Route): (Option[T]) => Route = {
+      case Some(t) => response(t)
+      case None => Directives.complete(StatusCodes.Forbidden)
+    }
+
+
   import db.DBIOOps
 
   def routes: Route =
-    getNotebooks.implementedByAsync { _ =>
+    getNotebooks.implementedByAsync { session: Session =>
       notebooksRepo
         .findAll()
         .run
-        .map(_.map(_.toDTO))
+        .map(x => Some(x.map(_.toDTO)))
     } ~
       createNotebook.implementedByAsync { req =>
         notebooksRepo
@@ -68,6 +88,9 @@ class ApiRoutes(notesRepo: NotesRepository,
             .update(req.toEntity(id))
             .run
             .map(_=>())
+      } ~
+      login.implementedBy {
+        c => Session(c.login)
       }
 
 
