@@ -3,9 +3,12 @@ package sst.backend.routes
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Directives, Route}
+import de.heikoseeberger.akkahttpcirce.CirceSupport
+import endpoints.algebra.CirceEntities
 import endpoints.{Tupler, akkahttp}
+import slick.dbio.DBIO
 import sst.backend.data._
-import sst.backend.data.tables.{NoteEntity, NotebookEntity, NotebooksRepository, NotesRepository}
+import sst.backend.data.tables._
 import sst.backend.util.SessionHelper
 import sst.shared._
 
@@ -13,6 +16,7 @@ import scala.concurrent.ExecutionContext
 
 class ApiRoutes(notesRepo: NotesRepository,
                 notebooksRepo: NotebooksRepository,
+                usersRepo: UsersRepository,
                 db: DBExecutor,
                 sessionHelper: SessionHelper)(implicit ec: ExecutionContext)
   extends ApiEndpoints
@@ -34,6 +38,16 @@ class ApiRoutes(notesRepo: NotesRepository,
       case Some(t) => response(t)
       case None => Directives.complete(StatusCodes.Forbidden)
     }
+
+  override def validatedResponse[T](response: (T) => Route)(implicit json: CirceEntities.CirceCodec[BadRequest]): (Either[BadRequest, T]) => Route = {
+    {
+      case Left(x) =>
+        implicit val encoder = json.encoder
+        import CirceSupport._
+        Directives.complete((StatusCodes.BadRequest, x))
+      case Right(x) => response(x)
+    }
+  }
 
 
   import db.DBIOOps
@@ -89,9 +103,35 @@ class ApiRoutes(notesRepo: NotesRepository,
             .run
             .map(_=>())
       } ~
-      login.implementedBy {
-        c => Session(c.login)
-      }
+      login.implementedByAsync {
+        cred => {
+          import com.github.t3hnar.bcrypt._
+          usersRepo
+            .findByUsername(cred.login)
+            .run
+            .map {
+              case Some(u) if u.passwordHash == cred.password.bcrypt(u.salt) =>
+                Some(Session(u.username))
+              case None =>
+                None
+            }
+        }
+      } ~
+      register.implementedByAsync(
+        cred => {
+          usersRepo.findByUsername(cred.login).flatMap{ userOpt =>
+            userOpt
+              .map(x => DBIO.successful(Left(BadRequest("Username taken"))))
+              .getOrElse{
+                import com.github.t3hnar.bcrypt._
+                val salt: String = generateSalt
+                val passwordHash: String = cred.password.bcrypt(salt)
+                val user = UserEntity(None, cred.login, passwordHash, salt)
+                usersRepo.save(user).map(_ => Right(()))
+              }
+          }.runTransactionally
+        }
+      )
 
 
   implicit class NotebookEntityOps(nb: NotebookEntity){

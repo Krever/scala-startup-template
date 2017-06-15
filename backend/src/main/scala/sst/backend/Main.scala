@@ -7,7 +7,7 @@ import com.typesafe.config.ConfigFactory
 import slick.jdbc.SQLiteProfile
 import slogging.{LazyLogging, LoggerConfig}
 import sst.backend.data._
-import sst.backend.data.tables.{NotebooksRepository, NotesRepository}
+import sst.backend.data.tables.{NotebooksRepository, NotesRepository, UsersRepository}
 import sst.backend.routes.{ApiRoutes, FrontedRoutes}
 import sst.backend.util.{AccessLogHelper, SessionHelper}
 
@@ -27,11 +27,12 @@ object Main extends LazyLogging {
     val slickProfile = SQLiteProfile
     val notebooksRepository = new NotebooksRepository(slickProfile)
     val notesRepository = new NotesRepository(slickProfile, notebooksRepository)
+    val usersRepository = new UsersRepository(slickProfile)
     val dbConfig = new DBConfig(config)
     val dbExecutor = new DBExecutor(slickProfile, dbConfig)
     val dbMigrator = new DBMigrator(dbConfig)
     val sessionHelper = new SessionHelper(config)
-    val apiRoutes = new ApiRoutes(notesRepository, notebooksRepository, dbExecutor, sessionHelper)
+    val apiRoutes = new ApiRoutes(notesRepository, notebooksRepository, usersRepository, dbExecutor, sessionHelper)
 
     import akka.http.scaladsl.server.Directives._
 

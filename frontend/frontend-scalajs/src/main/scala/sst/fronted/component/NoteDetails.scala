@@ -59,7 +59,6 @@ object NoteDetails extends LazyLogging {
   class Backend(t: BackendScope[Props, State]) {
 
     def render(p: Props, s: State): VdomElement = {
-      logger.debug(s"Rendering ${p.model}")
       if (isReady(p.model.value)) {
         val notebook = p.model.value.notebook.get
         val note = s.note

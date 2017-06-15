@@ -15,7 +15,8 @@ lazy val backend = (project in file("."))
       "biz.enef" %% "slogging-slf4j" % "0.5.2",
       "org.slf4j" % "slf4j-log4j12" % "1.7.25",
       "com.softwaremill.akka-http-session" %% "core" % "0.4.0",
-      "com.softwaremill.akka-http-session" %% "jwt"  % "0.4.0"
+      "com.softwaremill.akka-http-session" %% "jwt"  % "0.4.0",
+      "com.github.t3hnar" %% "scala-bcrypt" % "3.1"
     ),
     Revolver.enableDebugging(port = 5050, suspend = false)
   )

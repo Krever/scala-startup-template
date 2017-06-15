@@ -29,7 +29,11 @@ case class DeleteNote(note: Note) extends Action
 // Authentication test
 case class Login(username: String, password: String) extends Action
 
+case class Register(username: String, password: String) extends Action
+
 case class SetSession(session: String) extends Action
 
-case class Error(msg: String) extends Action
+case class ErrorMsg(msg: String) extends Action
+
+case class SuccessMsg(msg: String) extends Action
 

@@ -40,4 +40,8 @@ trait ApiBase
     }
   }
 
+  case class BadRequest(error: String)
+
+  def validatedResponse[T](response: Response[T])(implicit json: JsonResponse[BadRequest]): Response[Either[BadRequest, T]]
+
 }

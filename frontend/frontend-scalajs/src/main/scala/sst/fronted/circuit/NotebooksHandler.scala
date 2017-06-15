@@ -23,7 +23,7 @@ class NotebooksHandler[M](modelRW: ModelRW[M, (Pot[Notebooks], Option[AuthToken]
             .toFuture
             .map(_
               .map(x => UpdateAllNotebooks(x.toSeq))
-              .getOrElse(Error("Login failed"))
+              .getOrElse(ErrorMsg("Getting notebooks failed: Unathorized"))
             )))
     case UpdateAllNotebooks(notebooks) =>
       updatedNotebooks(Ready(Notebooks(notebooks)))

@@ -8,12 +8,20 @@ trait ApiEndpoints extends ApiBase with NotebookApi with NotesAPI {
   def apiBasePath: Path[Unit] = path / "api"
 
 
-  val login: Endpoint[Credentials, RawSession[Session]] =
+  val login: Endpoint[Credentials, Option[RawSession[Session]]] =
     anEndpoint
       .withMethod(Post)
-      .withUrl(path / "login")
+      .withUrl(apiBasePath / "login")
       .withJsonRequest[Credentials]
-      .withResponse(sessionSet(emptyResponse))
+      .withResponse(authorized(sessionSet(emptyResponse)))
+      .build[Credentials]
+
+  val register: Endpoint[Credentials, Either[BadRequest, Unit]] =
+    anEndpoint
+      .withMethod(Post)
+      .withUrl(apiBasePath / "register")
+      .withJsonRequest[Credentials]
+      .withResponse(validatedResponse(emptyResponse))
       .build[Credentials]
 
 
