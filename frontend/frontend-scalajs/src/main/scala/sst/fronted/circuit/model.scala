@@ -4,7 +4,15 @@ import diode.data.Pot
 import sst.shared.{Note, Notebook}
 
 case class AuthToken(jwtString: String)
-case class RootModel(notebooks: Pot[Notebooks], notes: Pot[Notes], session: Option[AuthToken])
+
+object MessageType extends Enumeration {
+  type MessageType = Value
+  val Success, Error = Value
+}
+
+case class Message(text: String, `type`: MessageType.MessageType)
+
+case class RootModel(notebooks: Pot[Notebooks], notes: Pot[Notes], session: Option[AuthToken], message: Option[Message])
 
 case class Notebooks(items: Seq[Notebook]) {
   def updated(newItem: Notebook): Notebooks = {

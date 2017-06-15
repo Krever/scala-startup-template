@@ -37,3 +37,5 @@ case class ErrorMsg(msg: String) extends Action
 
 case class SuccessMsg(msg: String) extends Action
 
+case object CloseMsg extends Action
+

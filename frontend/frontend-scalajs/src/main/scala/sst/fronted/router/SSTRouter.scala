@@ -5,7 +5,7 @@ import japgolly.scalajs.react.CallbackTo
 import japgolly.scalajs.react.extra.router.{Action, BaseUrl, Redirect, Resolution, Router, RouterConfigDsl, RouterCtl}
 import japgolly.scalajs.react.vdom.html_<^.{<, _}
 import sst.fronted.circuit.SSTCircuit
-import sst.fronted.component.{LoginForm, NoteDetails, NotebookDetails, NotebookList}
+import sst.fronted.component._
 
 class SSTRouter {
 
@@ -32,8 +32,10 @@ class SSTRouter {
       .renderWith(layout)
 
   private def layout(c: RouterCtl[SSTRoute], r: Resolution[SSTRoute]) = {
+    val messageWrapper = SSTCircuit.connect(_.message)
     <.div(
       ^.`class` := "ui container",
+      messageWrapper(x => MessageBox(x)),
       <.div(
         ^.`class` := "ui secondary pointing menu",
         <.a(

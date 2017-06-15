@@ -33,12 +33,6 @@ class LoginHandler[M](modelRW: ModelRW[M, Option[AuthToken]], apiClient: ApiClie
             case Right(_) => SuccessMsg("Registration successful")
           }
       ))
-    case ErrorMsg(msg) =>
-      logger.error(msg) //TODO message box
-      noChange
-    case SuccessMsg(msg) =>
-      logger.info(msg)
-      noChange
   }
 
 }
