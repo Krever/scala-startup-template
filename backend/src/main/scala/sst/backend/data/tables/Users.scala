@@ -5,8 +5,8 @@ import com.byteslounge.slickrepo.repository.Repository
 import slick.ast.BaseTypedType
 import slick.jdbc.JdbcProfile
 
-
-case class UserEntity(id: Option[Long], username: String, passwordHash: String, salt: String) extends Entity[UserEntity, Long] {
+case class UserEntity(id: Option[Long], username: String, passwordHash: String, salt: String)
+    extends Entity[UserEntity, Long] {
   def withId(id: Long): UserEntity = this.copy(id = Some(id))
 }
 
@@ -34,7 +34,7 @@ class UsersRepository(override val driver: JdbcProfile) extends Repository[UserE
 
   }
 
-  def findByUsername(username: String): DBIO[Option[UserEntity]] = tableQuery.filter(_.username === username).result.headOption
-
+  def findByUsername(username: String): DBIO[Option[UserEntity]] =
+    tableQuery.filter(_.username === username).result.headOption
 
 }

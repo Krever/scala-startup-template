@@ -5,7 +5,6 @@ import com.byteslounge.slickrepo.repository.Repository
 import slick.ast.BaseTypedType
 import slick.jdbc.JdbcProfile
 
-
 case class NotebookEntity(id: Option[Long], name: String) extends Entity[NotebookEntity, Long] {
   def withId(id: Long): NotebookEntity = this.copy(id = Some(id))
 }

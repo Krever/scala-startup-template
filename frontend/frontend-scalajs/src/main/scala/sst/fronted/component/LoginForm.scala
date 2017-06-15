@@ -14,20 +14,17 @@ object LoginForm extends LazyLogging {
 
   private val component = ScalaComponent
     .builder[Props]("Login")
-    .initialState(State("",""))
+    .initialState(State("", ""))
     .renderBackend[Backend]
     .componentDidUpdate(scope => scope.backend.updated(scope.currentProps))
     .build
 
-  def apply(
-      ctl: RouterCtl[SSTRoute],
-      redirectTo: Option[SSTRoute],
-      proxy: ModelProxy[Option[AuthToken]]): Unmounted[Props, State, Backend] =
+  def apply(ctl: RouterCtl[SSTRoute],
+            redirectTo: Option[SSTRoute],
+            proxy: ModelProxy[Option[AuthToken]]): Unmounted[Props, State, Backend] =
     component(Props(ctl, redirectTo, proxy))
 
-  case class Props(router: RouterCtl[SSTRoute],
-                   redirectTo: Option[SSTRoute],
-                   proxy: ModelProxy[Option[AuthToken]])
+  case class Props(router: RouterCtl[SSTRoute], redirectTo: Option[SSTRoute], proxy: ModelProxy[Option[AuthToken]])
 
   case class State(username: String, password: String)
 
@@ -35,8 +32,7 @@ object LoginForm extends LazyLogging {
 
     def updated(props: Props): Callback = {
       logger.debug(s"Login form updated: ${props.proxy.value}, ${props.redirectTo}")
-      Callback.when(props.proxy.value.isDefined && props.redirectTo.isDefined)(
-        props.router.set(props.redirectTo.get))
+      Callback.when(props.proxy.value.isDefined && props.redirectTo.isDefined)(props.router.set(props.redirectTo.get))
     }
 
     def render(p: Props, s: State): VdomElement = {
@@ -44,30 +40,28 @@ object LoginForm extends LazyLogging {
         <.div(
           ^.`class` := "ui form",
           <.div(^.`class` := "field",
-            <.label("Username"),
-            <.input(
-              ^.onChange ==> update((s,v) => s.copy(username = v)),
-              ^.value := s.username
-            )),
+                <.label("Username"),
+                <.input(
+                  ^.onChange ==> update((s, v) => s.copy(username = v)),
+                  ^.value := s.username
+                )),
           <.div(^.`class` := "field",
-            <.label("Password"),
-            <.input(
-              ^.onChange ==> update((s,v) => s.copy(password = v)),
-              ^.value := s.password
-            )),
+                <.label("Password"),
+                <.input(
+                  ^.onChange ==> update((s, v) => s.copy(password = v)),
+                  ^.value := s.password
+                )),
+          <.button(^.`class` := "ui button", ^.onClick --> p.proxy.dispatchCB(Login(s.username, s.password)), "Login"),
           <.button(^.`class` := "ui button",
-            ^.onClick --> p.proxy.dispatchCB(Login(s.username, s.password)),
-            "Login"),
-          <.button(^.`class` := "ui button",
-            ^.onClick --> p.proxy.dispatchCB(Register(s.username, s.password)),
-            "Register")
+                   ^.onClick --> p.proxy.dispatchCB(Register(s.username, s.password)),
+                   "Register")
         )
       )
     }
 
     private def update(f: (State, String) => State)(e: react.ReactEventFromTextArea) = {
       val v = e.target.value
-      if(e.target != null)
+      if (e.target != null)
         t.modState(f(_, v))
       else
         Callback.empty

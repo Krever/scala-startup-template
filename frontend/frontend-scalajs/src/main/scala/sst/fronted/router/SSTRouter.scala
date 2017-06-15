@@ -21,8 +21,7 @@ class SSTRouter {
         (notebooksRoute
           | notebookDetailsRoute
           | notesRoute
-          | staticRoute("#login", LoginRoute(None)) ~> renderLogin()
-          )
+          | staticRoute("#login", LoginRoute(None)) ~> renderLogin())
           .addCondition(CallbackTo(SSTCircuit.zoom(_.session).value.isDefined)) { route =>
             Some(renderLogin(Some(route)))
           }
@@ -54,47 +53,38 @@ class SSTRouter {
 
   private def renderLogin(route: Option[SSTRoute] = None)(implicit dsl: RouterConfigDsl[SSTRoute]): Action[SSTRoute] = {
     import dsl._
-    renderR {
-      rCtl =>
-        val wrapper = SSTCircuit.connect(m => m.session)
-        wrapper(proxy => LoginForm(rCtl, route, proxy))
+    renderR { rCtl =>
+      val wrapper = SSTCircuit.connect(m => m.session)
+      wrapper(proxy => LoginForm(rCtl, route, proxy))
     }
   }
 
-
   private def notebooksRoute(implicit dsl: RouterConfigDsl[SSTRoute]): dsl.Rule = {
     import dsl._
-    staticRoute(root, NotebooksRoute) ~> renderR(ctl =>
-      notebooksWrapper(proxy => NotebookList(ctl, NotebooksRoute, proxy)))
+    staticRoute(root, NotebooksRoute) ~> renderR(
+      ctl => notebooksWrapper(proxy => NotebookList(ctl, NotebooksRoute, proxy)))
   }
 
-  private def notebookDetailsRoute(
-      implicit dsl: RouterConfigDsl[SSTRoute]): dsl.Rule = {
+  private def notebookDetailsRoute(implicit dsl: RouterConfigDsl[SSTRoute]): dsl.Rule = {
     import dsl._
     dynamicRouteCT("#notebooks" / long.caseClass[NotebookDetailsRoute]) ~>
       dynRenderR {
         case (route @ NotebookDetailsRoute(id), router) =>
           val wrapper = SSTCircuit.connect(m =>
-            NotebookDetails.Model(m.notebooks.flatMap(x =>
-                                    Pot.fromOption(x.items.find(_.id == id))),
-                                  m.notes))
+            NotebookDetails.Model(m.notebooks.flatMap(x => Pot.fromOption(x.items.find(_.id == id))), m.notes))
           wrapper(proxy => NotebookDetails(router, route, proxy))
       }
   }
 
   private def notesRoute(implicit dsl: RouterConfigDsl[SSTRoute]): dsl.Rule = {
     import dsl._
-    dynamicRouteCT(
-      "#notebooks" / (long / "notes" / long).caseClass[NoteDetailsRoute]) ~>
+    dynamicRouteCT("#notebooks" / (long / "notes" / long).caseClass[NoteDetailsRoute]) ~>
       dynRenderR {
         case (route @ NoteDetailsRoute(notebookId, noteId), router) =>
           val wrapper = SSTCircuit.connect(
             m =>
-              NoteDetails.Model(
-                m.notebooks.flatMap(x =>
-                  Pot.fromOption(x.items.find(_.id == notebookId))),
-                m.notes.flatMap(x =>
-                  Pot.fromOption(x.items.find(_.id == noteId)))))
+              NoteDetails.Model(m.notebooks.flatMap(x => Pot.fromOption(x.items.find(_.id == notebookId))),
+                                m.notes.flatMap(x => Pot.fromOption(x.items.find(_.id == noteId)))))
           wrapper(proxy => NoteDetails(router, route, proxy))
       }
   }

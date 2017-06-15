@@ -21,12 +21,10 @@ object Dashboard {
     }
     .build
 
-  def apply(router: RouterCtl[SSTRoute],
-            proxy: ModelProxy[Pot[Notebooks]]): Unmounted[Props, State, Unit] =
+  def apply(router: RouterCtl[SSTRoute], proxy: ModelProxy[Pot[Notebooks]]): Unmounted[Props, State, Unit] =
     component(Props(router, proxy))
 
-  case class Props(router: RouterCtl[SSTRoute],
-                   proxy: ModelProxy[Pot[Notebooks]])
+  case class Props(router: RouterCtl[SSTRoute], proxy: ModelProxy[Pot[Notebooks]])
 
   case class State(notebooksWrapper: ReactConnectProxy[Pot[Notebooks]])
 

@@ -5,12 +5,13 @@ import com.byteslounge.slickrepo.repository.Repository
 import slick.ast.BaseTypedType
 import slick.jdbc.JdbcProfile
 
-
-case class NoteEntity(id: Option[Long], title: String, content: String, notebookId: Long) extends Entity[NoteEntity, Long] {
+case class NoteEntity(id: Option[Long], title: String, content: String, notebookId: Long)
+    extends Entity[NoteEntity, Long] {
   def withId(id: Long): NoteEntity = this.copy(id = Some(id))
 }
 
-class NotesRepository(override val driver: JdbcProfile, val notebooksRepository: NotebooksRepository) extends Repository[NoteEntity, Long](driver) {
+class NotesRepository(override val driver: JdbcProfile, val notebooksRepository: NotebooksRepository)
+    extends Repository[NoteEntity, Long](driver) {
 
   import driver.api._
 

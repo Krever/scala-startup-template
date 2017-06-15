@@ -26,23 +26,18 @@ object NotesList {
             proxy: ModelProxy[Pot[Notes]]): Unmounted[Props, Unit, Backend] =
     component(Props(ctl, currentLoc, notebookId, proxy))
 
-  case class Props(router: RouterCtl[SSTRoute],
-                   currentLoc: SSTRoute,
-                   notebookId: Long,
-                   proxy: ModelProxy[Pot[Notes]])
+  case class Props(router: RouterCtl[SSTRoute], currentLoc: SSTRoute, notebookId: Long, proxy: ModelProxy[Pot[Notes]])
 
   class Backend() {
     def mounted(props: Props): Callback =
-      Callback.when(props.proxy.value.isEmpty)(
-        props.proxy.dispatchCB(RefreshNotes(props.notebookId)))
+      Callback.when(props.proxy.value.isEmpty)(props.proxy.dispatchCB(RefreshNotes(props.notebookId)))
 
     def render(props: Props): TagOf[Div] = {
       <.div(
         ^.`class` := "ui relaxed divided list",
         <.a(
           ^.`class` := "item",
-          ^.onClick --> props.proxy.dispatchCB(
-            CreateNote(NoteRequest("New Note", "", props.notebookId))),
+          ^.onClick --> props.proxy.dispatchCB(CreateNote(NoteRequest("New Note", "", props.notebookId))),
           <.i(^.`class` := "plus icon"),
           "Create new note"
         ),

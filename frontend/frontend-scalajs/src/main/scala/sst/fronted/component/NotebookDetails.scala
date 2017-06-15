@@ -25,8 +25,7 @@ object NotebookDetails {
             ^.`class` := "ui basic clearing segment",
             <.div(
               ^.`class` := "ui breadcrumb",
-              props.ctl.link(NotebooksRoute)(^.`class` := "section",
-                                             "Notebooks"),
+              props.ctl.link(NotebooksRoute)(^.`class` := "section", "Notebooks"),
               <.div(^.`class` := "divider", "/"),
               <.div(^.`class` := "active section", model.name)
             ),
@@ -46,10 +45,7 @@ object NotebookDetails {
               <.i(^.`class` := "edit icon")
             )
           ),
-          NotesList(props.ctl,
-                    props.currentLoc,
-                    model.id,
-                    props.model.zoom(_.notes)),
+          NotesList(props.ctl, props.currentLoc, model.id, props.model.zoom(_.notes)),
           NotebookRenameModal(props.model.zoom(_.notebook.get))
         )
       } else {
@@ -57,18 +53,13 @@ object NotebookDetails {
       }
     }
     .componentDidMount(scope =>
-      Callback.when(!scope.props.model.value.notebook.isReady)(
-        scope.props.model.dispatchCB(RefreshNotebooks)))
+      Callback.when(!scope.props.model.value.notebook.isReady)(scope.props.model.dispatchCB(RefreshNotebooks)))
     .build
 
-  def apply(ctl: RouterCtl[SSTRoute],
-            currentLoc: SSTRoute,
-            proxy: ModelProxy[Model]): Unmounted[Props, Unit, Unit] =
+  def apply(ctl: RouterCtl[SSTRoute], currentLoc: SSTRoute, proxy: ModelProxy[Model]): Unmounted[Props, Unit, Unit] =
     component(Props(ctl, currentLoc, proxy))
 
-  case class Props(ctl: RouterCtl[SSTRoute],
-                   currentLoc: SSTRoute,
-                   model: ModelProxy[Model])
+  case class Props(ctl: RouterCtl[SSTRoute], currentLoc: SSTRoute, model: ModelProxy[Model])
 
   case class Model(notebook: Pot[Notebook], notes: Pot[Notes])
 

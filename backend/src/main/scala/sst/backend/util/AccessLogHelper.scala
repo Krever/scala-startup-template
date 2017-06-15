@@ -10,13 +10,11 @@ import slogging.LazyLogging
   */
 object AccessLogHelper extends LazyLogging {
 
-
   def logAccess: Directive0 =
     DebuggingDirectives.logRequestResult(LoggingMagnet(_ => logRequestResponse))
 
   private def logRequestResponse(req: HttpRequest)(res: RouteResult): Unit =
-    logger.debug(
-      s"""
+    logger.debug(s"""
          |Request: $req
          |Response: $res
          |""".stripMargin)

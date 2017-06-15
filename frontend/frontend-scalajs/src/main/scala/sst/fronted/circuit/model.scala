@@ -12,7 +12,10 @@ object MessageType extends Enumeration {
 
 case class Message(text: String, `type`: MessageType.MessageType)
 
-case class RootModel(notebooks: Pot[Notebooks], notes: Pot[Notes], session: Option[AuthToken], message: Option[Message])
+case class RootModel(notebooks: Pot[Notebooks],
+                     notes: Pot[Notes],
+                     session: Option[AuthToken],
+                     message: Option[Message])
 
 case class Notebooks(items: Seq[Notebook]) {
   def updated(newItem: Notebook): Notebooks = {

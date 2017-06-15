@@ -15,14 +15,12 @@ object MessageBox extends LazyLogging {
     .renderBackend[Backend]
     .build
 
-  def apply(
-             proxy: ModelProxy[Option[Message]]): Unmounted[Props, Unit, Backend] =
+  def apply(proxy: ModelProxy[Option[Message]]): Unmounted[Props, Unit, Backend] =
     component(Props(proxy))
 
   case class Props(model: ModelProxy[Option[Message]])
 
   class Backend() {
-
 
     def render(p: Props): VdomElement = {
       import diode.react.ReactPot._
@@ -33,19 +31,13 @@ object MessageBox extends LazyLogging {
       <.div(
         Pot
           .fromOption(p.model.value)
-          .render(m =>
-            <.div(^.`class` := s"ui ${getType(m.`type`)} message",
-              <.i(^.`class` := "close icon",
-                ^.onClick --> p.model.dispatchCB(CloseMsg)
-              ),
-              <.div(^.`class` := "header",
-                m.text
-              )
-            )
-          )
+          .render(
+            m =>
+              <.div(^.`class` := s"ui ${getType(m.`type`)} message",
+                    <.i(^.`class` := "close icon", ^.onClick --> p.model.dispatchCB(CloseMsg)),
+                    <.div(^.`class` := "header", m.text)))
       )
     }
-
 
   }
 

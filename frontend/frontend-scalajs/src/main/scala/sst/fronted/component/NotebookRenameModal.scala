@@ -63,8 +63,7 @@ object NotebookRenameModal {
             ^.`class` := "ui positive right labeled icon button",
             "Save",
             <.i(^.`class` := "checkmark icon"),
-            ^.onClick --> props.proxy.dispatchCB(UpdateNotebook(
-              props.proxy.value.copy(name = state.notebookName)))
+            ^.onClick --> props.proxy.dispatchCB(UpdateNotebook(props.proxy.value.copy(name = state.notebookName)))
           )
         )
       )

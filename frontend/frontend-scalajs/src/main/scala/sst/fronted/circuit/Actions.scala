@@ -25,7 +25,6 @@ case class UpdateNote(note: Note) extends Action
 
 case class DeleteNote(note: Note) extends Action
 
-
 // Authentication test
 case class Login(username: String, password: String) extends Action
 
@@ -38,4 +37,3 @@ case class ErrorMsg(msg: String) extends Action
 case class SuccessMsg(msg: String) extends Action
 
 case object CloseMsg extends Action
-

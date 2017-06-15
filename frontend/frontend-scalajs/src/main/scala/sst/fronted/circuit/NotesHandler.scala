@@ -12,7 +12,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * Created by wpitula on 5/19/17.
   */
 class NotesHandler[M](modelRW: ModelRW[M, Pot[Notes]], apiClient: ApiClient)
-    extends ActionHandler(modelRW) with LazyLogging {
+    extends ActionHandler(modelRW)
+    with LazyLogging {
   override def handle = {
     case RefreshNotes(notebookId) =>
       effectOnly(
@@ -25,16 +26,13 @@ class NotesHandler[M](modelRW: ModelRW[M, Pot[Notes]], apiClient: ApiClient)
       updated(Ready(Notes(notes)))
     case UpdateNote(note) =>
       def effect =
-        apiClient.updateNote(
-          (note.id, NoteRequest(note.title, note.content, note.notebookId)))
+        apiClient.updateNote((note.id, NoteRequest(note.title, note.content, note.notebookId)))
 
-      updated(value.map(_.updated(note)),
-              Effect(effect.toFuture.map(_ => RefreshNotes(note.notebookId))))
+      updated(value.map(_.updated(note)), Effect(effect.toFuture.map(_ => RefreshNotes(note.notebookId))))
     case CreateNote(request) =>
       def effect = apiClient.createNote(request)
 
-      effectOnly(
-        Effect(effect.toFuture.map(_ => RefreshNotes(request.notebookId))))
+      effectOnly(Effect(effect.toFuture.map(_ => RefreshNotes(request.notebookId))))
     case DeleteNote(note) =>
       updated(value.map(_.remove(note)),
               Effect(

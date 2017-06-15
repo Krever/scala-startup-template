@@ -39,7 +39,7 @@ object Main extends LazyLogging {
     val address = config.getString("sst.backend.http.interface")
     val port = config.getInt("sst.backend.http.port")
 
-    val route = AccessLogHelper.logAccess{
+    val route = AccessLogHelper.logAccess {
       apiRoutes.routes ~ FrontedRoutes.routes
     }
 
@@ -51,9 +51,7 @@ object Main extends LazyLogging {
         System.exit(1)
     }
 
-    val _ = Http().bindAndHandle(route,
-                                 address,
-                                 port)
+    val _ = Http().bindAndHandle(route, address, port)
 
     logger.info(s"Server online at http://$address:$port/")
 

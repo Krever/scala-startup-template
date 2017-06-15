@@ -22,7 +22,7 @@ case class JWTObject(claim: Claim)
 case class Claim(data: Session)
 
 class ApiClient()
-  extends sst.shared.ApiEndpoints
+    extends sst.shared.ApiEndpoints
     with endpoints.xhr.Endpoints
     with endpoints.xhr.thenable.Endpoints
     with endpoints.xhr.CirceEntities
@@ -41,19 +41,20 @@ class ApiClient()
   type RawSession[T] = String
 
   def sessionSet[T](resp: Response[T])(implicit tupler: Tupler[T, RawSession[Session]]): Response[tupler.Out] = {
-    (xhr: XMLHttpRequest) => {
-      resp(xhr).right.map { t =>
-        tupler.apply(t, xhr.getResponseHeader(responseSessionHeaderName))
+    (xhr: XMLHttpRequest) =>
+      {
+        resp(xhr).right.map { t =>
+          tupler.apply(t, xhr.getResponseHeader(responseSessionHeaderName))
+        }
       }
-    }
   }
 
   def sessionReqHeader: RequestHeaders[RawSession[Session]] =
-    (s: RawSession[Session], req: XMLHttpRequest) =>
-      req.setRequestHeader(requestSessionHeaderName, s)
+    (s: RawSession[Session], req: XMLHttpRequest) => req.setRequestHeader(requestSessionHeaderName, s)
 
-  def authorized[T](response: js.Function1[XMLHttpRequest, Either[Exception, T]]): js.Function1[XMLHttpRequest, Either[Exception, Option[T]]] = {
-    (xhr: XMLHttpRequest) => {
+  def authorized[T](response: js.Function1[XMLHttpRequest, Either[Exception, T]])
+    : js.Function1[XMLHttpRequest, Either[Exception, Option[T]]] = { (xhr: XMLHttpRequest) =>
+    {
       if (xhr.status == 403) Right(None)
       else response(xhr).right.map(Some(_))
     }
@@ -61,8 +62,10 @@ class ApiClient()
 
   def toUnit[T](x: T): Unit = logger.debug("To Unit: " + x.toString)
 
-  override def validatedResponse[T](response: js.Function1[XMLHttpRequest, Either[Exception, T]])(implicit json: CirceCodec[BadRequest]): js.Function1[XMLHttpRequest, Either[Exception, Either[BadRequest, T]]] = {
-    xhr => {
+  override def validatedResponse[T](response: js.Function1[XMLHttpRequest, Either[Exception, T]])(
+      implicit json: CirceCodec[BadRequest])
+    : js.Function1[XMLHttpRequest, Either[Exception, Either[BadRequest, T]]] = { xhr =>
+    {
       val badRequest = jsonResponse[BadRequest]
       xhr.status match {
         case 400 => badRequest(xhr).right.map(Left(_))

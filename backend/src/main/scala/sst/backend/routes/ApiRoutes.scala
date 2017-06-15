@@ -19,7 +19,7 @@ class ApiRoutes(notesRepo: NotesRepository,
                 usersRepo: UsersRepository,
                 db: DBExecutor,
                 sessionHelper: SessionHelper)(implicit ec: ExecutionContext)
-  extends ApiEndpoints
+    extends ApiEndpoints
     with akkahttp.server.Endpoints
     with akkahttp.server.CirceEntities {
 
@@ -29,17 +29,18 @@ class ApiRoutes(notesRepo: NotesRepository,
   def sessionSet[T](resp: Response[T])(implicit tupler: Tupler[T, RawSession[Session]]): Response[tupler.Out] =
     (out: tupler.Out) => {
       val (t, session) = tupler.unapply(out)
-      sessionHelper.setSession(session){
+      sessionHelper.setSession(session) {
         resp(t)
       }
     }
 
   override def authorized[T](response: (T) => Route): (Option[T]) => Route = {
-      case Some(t) => response(t)
-      case None => Directives.complete(StatusCodes.Forbidden)
-    }
+    case Some(t) => response(t)
+    case None => Directives.complete(StatusCodes.Forbidden)
+  }
 
-  override def validatedResponse[T](response: (T) => Route)(implicit json: CirceEntities.CirceCodec[BadRequest]): (Either[BadRequest, T]) => Route = {
+  override def validatedResponse[T](response: (T) => Route)(
+      implicit json: CirceEntities.CirceCodec[BadRequest]): (Either[BadRequest, T]) => Route = {
     {
       case Left(x) =>
         implicit val encoder = json.encoder
@@ -48,7 +49,6 @@ class ApiRoutes(notesRepo: NotesRepository,
       case Right(x) => response(x)
     }
   }
-
 
   import db.DBIOOps
 
@@ -76,7 +76,7 @@ class ApiRoutes(notesRepo: NotesRepository,
           notebooksRepo
             .update(req.toEntity(id))
             .run
-            .map(_=>())
+            .map(_ => ())
       } ~
       getNotesFromNotebook.implementedByAsync { id =>
         notesRepo
@@ -101,10 +101,10 @@ class ApiRoutes(notesRepo: NotesRepository,
           notesRepo
             .update(req.toEntity(id))
             .run
-            .map(_=>())
+            .map(_ => ())
       } ~
-      login.implementedByAsync {
-        cred => {
+      login.implementedByAsync { cred =>
+        {
           import com.github.t3hnar.bcrypt._
           usersRepo
             .findByUsername(cred.login)
@@ -119,35 +119,37 @@ class ApiRoutes(notesRepo: NotesRepository,
       } ~
       register.implementedByAsync(
         cred => {
-          usersRepo.findByUsername(cred.login).flatMap{ userOpt =>
-            userOpt
-              .map(x => DBIO.successful(Left(BadRequest("Username taken"))))
-              .getOrElse{
-                import com.github.t3hnar.bcrypt._
-                val salt: String = generateSalt
-                val passwordHash: String = cred.password.bcrypt(salt)
-                val user = UserEntity(None, cred.login, passwordHash, salt)
-                usersRepo.save(user).map(_ => Right(()))
-              }
-          }.runTransactionally
+          usersRepo
+            .findByUsername(cred.login)
+            .flatMap { userOpt =>
+              userOpt
+                .map(x => DBIO.successful(Left(BadRequest("Username taken"))))
+                .getOrElse {
+                  import com.github.t3hnar.bcrypt._
+                  val salt: String = generateSalt
+                  val passwordHash: String = cred.password.bcrypt(salt)
+                  val user = UserEntity(None, cred.login, passwordHash, salt)
+                  usersRepo.save(user).map(_ => Right(()))
+                }
+            }
+            .runTransactionally
         }
       )
 
-
-  implicit class NotebookEntityOps(nb: NotebookEntity){
+  implicit class NotebookEntityOps(nb: NotebookEntity) {
     def toDTO = Notebook(nb.id.get, nb.name)
   }
-  implicit class NoteEntityOps(n: NoteEntity){
+  implicit class NoteEntityOps(n: NoteEntity) {
     def toDTO = Note(n.id.get, n.title, n.content, n.notebookId)
   }
 
-  implicit class NotebookReqOps(nb: NotebookRequest){
+  implicit class NotebookReqOps(nb: NotebookRequest) {
     def toEntity = NotebookEntity(None, nb.name)
     def toEntity(id: Long) = NotebookEntity(Some(id), nb.name)
   }
 
-  implicit class NoteReqOps(n: NoteRequest){
-    def toEntity = NoteEntity(None, n.title,n.content, n.notebookId)
-    def toEntity(id: Long) = NoteEntity(Some(id), n.title,n.content, n.notebookId)
+  implicit class NoteReqOps(n: NoteRequest) {
+    def toEntity = NoteEntity(None, n.title, n.content, n.notebookId)
+    def toEntity(id: Long) = NoteEntity(Some(id), n.title, n.content, n.notebookId)
   }
 }

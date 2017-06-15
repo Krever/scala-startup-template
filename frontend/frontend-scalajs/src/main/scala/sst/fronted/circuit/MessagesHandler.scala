@@ -3,8 +3,7 @@ package sst.fronted.circuit
 import diode.{ActionHandler, ModelRW}
 import slogging.LazyLogging
 
-class MessagesHandler[M](modelRW: ModelRW[M, Option[Message]])
-    extends ActionHandler(modelRW) with LazyLogging {
+class MessagesHandler[M](modelRW: ModelRW[M, Option[Message]]) extends ActionHandler(modelRW) with LazyLogging {
   override def handle = {
     case ErrorMsg(msg) =>
       logger.error(msg)
