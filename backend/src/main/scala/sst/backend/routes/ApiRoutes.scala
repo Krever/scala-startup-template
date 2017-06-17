@@ -40,7 +40,7 @@ class ApiRoutes(notesRepo: NotesRepository,
   }
 
   override def validatedResponse[T](response: (T) => Route)(
-      implicit json: CirceEntities.CirceCodec[BadRequest]): (Either[BadRequest, T]) => Route = {
+    implicit json: CirceEntities.CirceCodec[BadRequest]): (Either[BadRequest, T]) => Route = {
     {
       case Left(x) =>
         implicit val encoder = json.encoder

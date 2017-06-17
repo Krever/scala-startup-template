@@ -13,13 +13,14 @@ lazy val root = (project in file("."))
     mappings in Universal ++= {
       (WebKeys.stage in frontend).map { dir =>
         ((dir.*** --- dir) pair relativeTo(dir))
-          .map(x => (x._1, "webstage/"+x._2))
+          .map(x => (x._1, "webstage/" + x._2))
       }.value
     },
     scriptClasspath in bashScriptDefines ~= (cp => "../webstage" +: cp),
     dockerRepository in Docker := Some("registry.gitlab.com/w-pitula"),
     dockerUpdateLatest in Docker := true,
-    aggregate in Docker := false
+    aggregate in Docker := false,
+    makeSite := { (makeSite in site).value }
   )
   .settings(Linting.settings)
 
@@ -33,7 +34,7 @@ lazy val shared = crossProject
   .enablePlugins(ScalafmtPlugin)
   .settings(Linting.settings)
   .settings(
-    resolvers +=  Resolver.mavenLocal,
+    resolvers += Resolver.mavenLocal,
     libraryDependencies ++= Seq(
       "org.julienrf" %% "endpoints-algebra" % "0.3.0-1-SNAPSHOT",
       "org.julienrf" %% "endpoints-algebra-circe" % "0.3.0-1-SNAPSHOT"
@@ -42,3 +43,5 @@ lazy val shared = crossProject
 
 lazy val sharedJs = shared.js
 lazy val sharedJvm = shared.jvm
+
+lazy val site = project

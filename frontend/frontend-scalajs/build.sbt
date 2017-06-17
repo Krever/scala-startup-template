@@ -5,7 +5,6 @@ lazy val `frontend-scalajs` = (project in file("."))
   .settings(
     resolvers += Resolver.mavenLocal,
     libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scalajs-dom" % "0.9.1",
       "com.github.japgolly.scalajs-react" %%% "core" % "1.0.0",
       "com.github.japgolly.scalajs-react" %%% "extra" % "1.0.0",
       "io.suzaku" %%% "diode" % "1.1.2",

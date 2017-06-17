@@ -17,3 +17,7 @@ addSbtPlugin("io.spray" % "sbt-revolver" % "0.8.0")
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.0")
 
 addSbtPlugin("com.softwaremill.clippy" % "plugin-sbt" % "0.5.3")
+
+addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.2.1")
+
+addSbtPlugin("com.typesafe.sbt" % "sbt-ghpages" % "0.6.0")

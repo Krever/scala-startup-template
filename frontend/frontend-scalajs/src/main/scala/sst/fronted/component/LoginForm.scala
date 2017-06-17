@@ -48,6 +48,7 @@ object LoginForm extends LazyLogging {
           <.div(^.`class` := "field",
                 <.label("Password"),
                 <.input(
+                  ^.`type` := "password",
                   ^.onChange ==> update((s, v) => s.copy(password = v)),
                   ^.value := s.password
                 )),

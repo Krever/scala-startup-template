@@ -63,14 +63,14 @@ class ApiClient()
   def toUnit[T](x: T): Unit = logger.debug("To Unit: " + x.toString)
 
   override def validatedResponse[T](response: js.Function1[XMLHttpRequest, Either[Exception, T]])(
-      implicit json: CirceCodec[BadRequest])
-    : js.Function1[XMLHttpRequest, Either[Exception, Either[BadRequest, T]]] = { xhr =>
-    {
-      val badRequest = jsonResponse[BadRequest]
-      xhr.status match {
-        case 400 => badRequest(xhr).right.map(Left(_))
-        case _ => response(xhr).right.map(Right(_))
+    implicit json: CirceCodec[BadRequest]): js.Function1[XMLHttpRequest, Either[Exception, Either[BadRequest, T]]] = {
+    xhr =>
+      {
+        val badRequest = jsonResponse[BadRequest]
+        xhr.status match {
+          case 400 => badRequest(xhr).right.map(Left(_))
+          case _ => response(xhr).right.map(Right(_))
+        }
       }
-    }
   }
 }
