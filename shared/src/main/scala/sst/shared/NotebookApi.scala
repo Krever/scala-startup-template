@@ -11,11 +11,12 @@ trait NotebookApi {
 
 
   val getNotebooks: Endpoint[RawSession[Session], Option[Iterable[Notebook]]] =
-    anEndpoint
-      .withMethod(Get)
-      .withUrl(allNotebooksPath)
-      .withJsonResponse[Iterable[Notebook]]
-      .buildSessionSecured[Unit, RawSession[Session]]
+    sessionSecuredEndpoint[Unit, Unit, Iterable[Notebook], Unit](
+      Get,
+      allNotebooksPath,
+      emptyRequest,
+      jsonResponse[Iterable[Notebook]]
+    )
 
   val createNotebook: Endpoint[NotebookRequest, Notebook] =
     endpoint(

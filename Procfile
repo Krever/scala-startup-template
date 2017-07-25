@@ -1,1 +1,1 @@
-web: target/universal/stage/bin/scala-startup-template -Dsst.backend.port=${PORT}
+web: target/universal/stage/bin/scala-startup-template -Dsst.backend.http.port=${PORT}

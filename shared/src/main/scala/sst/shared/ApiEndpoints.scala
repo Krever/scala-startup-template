@@ -9,21 +9,16 @@ trait ApiEndpoints extends ApiBase with NotebookApi with NotesAPI {
 
 
   val login: Endpoint[Credentials, Option[RawSession[Session]]] =
-    anEndpoint
-      .withMethod(Post)
-      .withUrl(apiBasePath / "login")
-      .withJsonRequest[Credentials]
-      .withResponse(authorized(sessionSet(emptyResponse)))
-      .build[Credentials]
+    endpoint(
+      post[Unit, Credentials, Unit, Credentials](apiBasePath / "login", jsonRequest[Credentials]),
+      authorized(sessionSet(emptyResponse))
+    )
 
   val register: Endpoint[Credentials, Either[BadRequest, Unit]] =
-    anEndpoint
-      .withMethod(Post)
-      .withUrl(apiBasePath / "register")
-      .withJsonRequest[Credentials]
-      .withResponse(validatedResponse(emptyResponse))
-      .build[Credentials]
-
+    endpoint(
+      post[Unit, Credentials, Unit, Credentials](apiBasePath / "register", jsonRequest[Credentials]),
+      validatedResponse(emptyResponse)
+    )
 
 }
 

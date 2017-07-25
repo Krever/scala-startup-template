@@ -8,12 +8,10 @@ import endpoints.{Tupler, algebra}
   */
 trait ApiBase
   extends algebra.Endpoints
-    with CirceEntities
-    with algebra.Builders
-    with algebra.JsonBuilders {
+    with algebra.JsonEntities
+    with CirceEntities {
 
   def apiBasePath: Path[Unit]
-
 
   def requestSessionHeaderName = "Authorization"
 
@@ -27,18 +25,17 @@ trait ApiBase
 
   def authorized[T](response: Response[T]): Response[Option[T]]
 
-  implicit class SessionEndpointOps[U, ReqH, ReqE, RespE](endp: EndpointBuilder[U, ReqH, ReqE, RespE]) {
-    def buildSessionSecured[UE, NewH](implicit
-                                      tupler: Tupler.Aux[ReqH, RawSession[Session], NewH],
-                                      tuplerUE: Tupler.Aux[U, ReqE, UE],
-                                      tuplerUEH: Tupler[UE, NewH]): Endpoint[tuplerUEH.Out, Option[RespE]] = {
-      val resp = authorized(endp.response)
-      endp
-        .addRequestHeaders(sessionReqHeader)
-        .withResponse(resp)
-        .build[UE]
-    }
-  }
+  def sessionSecuredEndpoint[A, B, C, AB](
+    method: Method,
+    url: Url[A],
+    requestEntity: RequestEntity[B] = emptyRequest,
+    response: Response[C]
+  )(implicit
+    tuplerAB: Tupler.Aux[A, B, AB],
+    tuplerABC: Tupler[AB, RawSession[Session]]
+  ): Endpoint[tuplerABC.Out, Option[C]] =
+    endpoint(request(method, url, requestEntity, sessionReqHeader), authorized(response))
+
 
   case class BadRequest(error: String)
 
