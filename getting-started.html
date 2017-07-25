@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 
 <head>
-<title>Scala Startup Template</title>
+<title>Getting started · Scala Startup Template</title>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content='site'/>
@@ -25,7 +25,7 @@
 <div class="off-canvas position-left" id="off-canvas-menu" data-off-canvas>
 <nav class="off-canvas-nav">
 <div class="nav-home">
-<a href="index.html" class="active">
+<a href="index.html" >
 <span class="home-icon">⌂</span>Scala Startup Template
 </a>
 <div class="version-number">
@@ -35,7 +35,7 @@
 <div class="nav-toc">
 <ul>
   <li><a href="stack.html">The stack</a></li>
-  <li><a href="getting-started.html">Getting started</a></li>
+  <li><a href="getting-started.html" class="active">Getting started</a></li>
 </ul>
 </div>
 
@@ -50,7 +50,7 @@
 H3.6C3.048,13,3,13.447,3,14c0,0.553,0.048,1,0.6,1H16.4c0.552,0,0.6-0.447,0.6-1C17,13.447,16.952,13,16.4,13z M3.6,7H16.4
 C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.048,7,3.6,7z"/></svg>
 </a>
-<div class="title"><a href="index.html" class="active">Scala Startup Template</a></div>
+<div class="title"><a href="index.html">Scala Startup Template</a></div>
 
 <!--
 <a href="https://www.example.com" class="logo show-for-medium">logo</a>
@@ -63,7 +63,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="medium-3 large-2 show-for-medium column">
 <nav class="site-nav">
 <div class="nav-home">
-<a href="index.html" class="active">
+<a href="index.html" >
 <span class="home-icon">⌂</span>Scala Startup Template
 </a>
 <div class="version-number">
@@ -73,7 +73,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="nav-toc">
 <ul>
   <li><a href="stack.html">The stack</a></li>
-  <li><a href="getting-started.html">Getting started</a></li>
+  <li><a href="getting-started.html" class="active">Getting started</a></li>
 </ul>
 </div>
 
@@ -85,18 +85,58 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 
 <div class="page-header row">
 <div class="medium-12 show-for-medium column">
+<div class="nav-breadcrumbs">
+<ul>
+  <li><a href="index.html">Scala Startup Template</a></li>
+  <li>Getting started</li>
+</ul>
+</div>
 </div>
 </div>
 
 <div class="page-content row">
 <div class="small-12 large-9 column" id="docs">
-<h1><a href="#scala-startup-template" name="scala-startup-template" class="anchor"><span class="anchor-link"></span></a>Scala Startup Template</h1>
-<p>Scala startup template(SST) is a project aiming to deliver e2e technology stack for creating typical web-based applications. </p>
-<div class="nav-next">
-<p><strong>Next:</strong> <a href="stack.html">The stack</a></p>
-</div>
+<h2><a href="#getting-started" name="getting-started" class="anchor"><span class="anchor-link"></span></a>Getting started</h2>
+<p>All of the basic operation are implemented as scripts inside <code>bin</code> directory.</p>
+<h3><a href="#development" name="development" class="anchor"><span class="anchor-link"></span></a>Development</h3>
+<pre class="prettyprint"><code class="language-bash">bin/run-dev.sh
+</code></pre>
+<p>The debug is available on port <code>5050</code>.</p>
+<h3><a href="#deployment" name="deployment" class="anchor"><span class="anchor-link"></span></a>Deployment</h3>
+<p>Few various ways of deployment are available </p>
+<h4><a href="#simple" name="simple" class="anchor"><span class="anchor-link"></span></a>Simple</h4>
+<pre class="prettyprint"><code class="language-bash">target/universal/stage/bin/scala-startup-template
+</code></pre>
+<p>The configuration may be modified by add <code>-D</code> flags</p>
+<h4><a href="#docker" name="docker" class="anchor"><span class="anchor-link"></span></a>Docker</h4>
+<pre class="prettyprint"><code class="language-bash">sbt docker:publish
+docker run --rm -it -p 8080:8080 registry.gitlab.com/w-pitula/scala-startup-template:latest
+</code></pre>
+<h4><a href="#docker-compose" name="docker-compose" class="anchor"><span class="anchor-link"></span></a>Docker compose</h4>
+<p>You can easily get https support thanks to <code>jwilder/nginx-proxy</code> and <code>jrcs/letsencrypt-nginx-proxy-companion</code> projects</p>
+<pre class="prettyprint"><code class="language-bash">sbt docker:publish
+bin/deploy-to-vps.sh my.host.com my.domain.com
+</code></pre>
+<h4><a href="#heroku" name="heroku" class="anchor"><span class="anchor-link"></span></a>Heroku</h4>
+<pre class="prettyprint"><code class="language-bash">bin/initialize-heroku.sh
+bin/deploy-to-heroku.sh
+</code></pre>
 </div>
 <div class="large-3 show-for-large column" data-sticky-container>
+<nav class="sidebar sticky" data-sticky data-anchor="docs" data-sticky-on="large">
+<div class="page-nav">
+<div class="nav-title">On this page:</div>
+<div class="nav-toc">
+<ul>
+  <li><a href="getting-started.html#getting-started">Getting started</a>
+  <ul>
+    <li><a href="getting-started.html#development">Development</a></li>
+    <li><a href="getting-started.html#deployment">Deployment</a></li>
+  </ul></li>
+</ul>
+</div>
+</div>
+</nav>
 </div>
 </div>
 

@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 
 <head>
-<title>Scala Startup Template</title>
+<title>The stack · Scala Startup Template</title>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content='site'/>
@@ -25,7 +25,7 @@
 <div class="off-canvas position-left" id="off-canvas-menu" data-off-canvas>
 <nav class="off-canvas-nav">
 <div class="nav-home">
-<a href="index.html" class="active">
+<a href="index.html" >
 <span class="home-icon">⌂</span>Scala Startup Template
 </a>
 <div class="version-number">
@@ -34,7 +34,7 @@
 </div>
 <div class="nav-toc">
 <ul>
-  <li><a href="stack.html">The stack</a></li>
+  <li><a href="stack.html" class="active">The stack</a></li>
   <li><a href="getting-started.html">Getting started</a></li>
 </ul>
 </div>
@@ -50,7 +50,7 @@
 H3.6C3.048,13,3,13.447,3,14c0,0.553,0.048,1,0.6,1H16.4c0.552,0,0.6-0.447,0.6-1C17,13.447,16.952,13,16.4,13z M3.6,7H16.4
 C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.048,7,3.6,7z"/></svg>
 </a>
-<div class="title"><a href="index.html" class="active">Scala Startup Template</a></div>
+<div class="title"><a href="index.html">Scala Startup Template</a></div>
 
 <!--
 <a href="https://www.example.com" class="logo show-for-medium">logo</a>
@@ -63,7 +63,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="medium-3 large-2 show-for-medium column">
 <nav class="site-nav">
 <div class="nav-home">
-<a href="index.html" class="active">
+<a href="index.html" >
 <span class="home-icon">⌂</span>Scala Startup Template
 </a>
 <div class="version-number">
@@ -72,7 +72,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 </div>
 <div class="nav-toc">
 <ul>
-  <li><a href="stack.html">The stack</a></li>
+  <li><a href="stack.html" class="active">The stack</a></li>
   <li><a href="getting-started.html">Getting started</a></li>
 </ul>
 </div>
@@ -85,15 +85,80 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 
 <div class="page-header row">
 <div class="medium-12 show-for-medium column">
+<div class="nav-breadcrumbs">
+<ul>
+  <li><a href="index.html">Scala Startup Template</a></li>
+  <li>The stack</li>
+</ul>
+</div>
 </div>
 </div>
 
 <div class="page-content row">
 <div class="small-12 large-9 column" id="docs">
-<h1><a href="#scala-startup-template" name="scala-startup-template" class="anchor"><span class="anchor-link"></span></a>Scala Startup Template</h1>
-<p>Scala startup template(SST) is a project aiming to deliver e2e technology stack for creating typical web-based applications. </p>
+<h2><a href="#the-stack" name="the-stack" class="anchor"><span class="anchor-link"></span></a>The stack</h2>
+<ul>
+  <li>Scala programming language - for all application code</li>
+  <li>SBT - for building the project
+    <ul>
+      <li>sbt-scalajs - for compiling scala.js</li>
+      <li>sbt-web-scalajs - for integrating scala.js with other web assets</li>
+      <li>sbt-native-packager - for packaging the application</li>
+      <li>sbt-scapegoat - for automated code linting</li>
+      <li>sbt-wartremover - for automated code linting</li>
+      <li>sbt-scalafmt - for automated code formatting</li>
+      <li>sbt-revolver - for fast development loop</li>
+      <li>sbt-updates - for finding stale dependencies</li>
+      <li>sbt-clippy - for more meaningful compile errors</li>
+      <li>sbt-site - for generating documentation</li>
+    </ul>
+  </li>
+  <li>Shared
+    <ul>
+      <li>endpoints - for defining API</li>
+      <li>endpoints-circe - for JSON serialization in API</li>
+    </ul>
+  </li>
+  <li>Backend
+    <ul>
+      <li>endpoints-akka-http-server - for serving the API</li>
+      <li>slick - for DB access</li>
+      <li>slick-repo - for less boilerplate in DB access</li>
+      <li>flyway - for DB migrations</li>
+      <li>sqlite - for data storage</li>
+      <li>slogging - for platform-agnostic logging abstraction</li>
+      <li>slf4j - for JVM logging abstraction</li>
+      <li>log4j - for logging</li>
+      <li>akka-http-session - for authentication</li>
+      <li>scala-bcrypt - for password encryption</li>
+    </ul>
+  </li>
+  <li>Frontend
+    <ul>
+      <li>scalajs-react/core - for scala react API</li>
+      <li>scalajs-react/extra - for routing</li>
+      <li>diode - for application control flow</li>
+      <li>diode-react&quot; - for integration with scalajs-react</li>
+      <li>endpoints-xhr-client - for calling the API</li>
+      <li>slogging - for logging</li>
+      <li>scalajs-jquery - for jquery api</li>
+      <li>react - for view definition</li>
+      <li>semanticUI - for view styling</li>
+      <li>jquery - for interacting with semanticUI</li>
+    </ul>
+  </li>
+  <li>Other
+    <ul>
+      <li>.gitlab-ci.yml - for continuous integration</li>
+      <li>Procfile - for heroku deployment</li>
+      <li>jwilder/nginx-proxy - for reverse proxy</li>
+      <li>jrcs/letsencrypt-nginx-proxy-companion - for automated letencrypt-based https</li>
+      <li>bash - for automated deployment and running</li>
+    </ul>
+  </li>
+</ul>
 <div class="nav-next">
-<p><strong>Next:</strong> <a href="stack.html">The stack</a></p>
+<p><strong>Next:</strong> <a href="getting-started.html">Getting started</a></p>
 </div>
 </div>
 <div class="large-3 show-for-large column" data-sticky-container>
